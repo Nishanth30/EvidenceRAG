@@ -1,0 +1,1302 @@
+[
+  {
+    "configuration": "A",
+    "id": "h01",
+    "kind": "multi_evidence",
+    "question": "The event publisher died after the broker accepted an event but before it saved its progress. Does saving events alongside business writes prevent another delivery, and what protection is still needed?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 1.0,
+    "rejected_by_threshold": false,
+    "top_score": 0.5250446796417236,
+    "elapsed_ms_first_repeat": 3.4124579979106784,
+    "retrieved": [
+      {
+        "chunk_id": "590b761d0c255e9d3dd3c646fc8b2ecb69bd9a70c43302ffec538b8c85e29c98",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1074,
+        "end": 1543,
+        "text": "transactional outbox stores the business change and an outgoing event in one database transaction.\n\nA relay later reads unsent outbox rows and publishes them to the broker. A crash after publication but before recording success can publish the event again. Consumers still need deduplication. The outbox removes the gap in which a database commit succeeds but the corresponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n",
+        "score": 0.5250446796417236
+      },
+      {
+        "chunk_id": "24fd6deb190f26ae1fa9ee6420dbd4f72dd3208123e328928a34eeb693ed0fc3",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 306,
+        "end": 640,
+        "text": "business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.5113215446472168
+      },
+      {
+        "chunk_id": "caeefb75fedffff6fdb28e2a8625711a1dffb0501c3d63d7f072d8ca7bc8ab50",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 406,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. ",
+        "score": 0.47733041644096375
+      },
+      {
+        "chunk_id": "2afd2c670bf0bfdc6d97d848bf4f0b6cae8b5e62ad7a30ac86b5187d76e9b779",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 975,
+        "end": 1430,
+        "text": "Write-ahead logging persists the log record before the corresponding changed data page is flushed.\n\nRecovery can replay durable log records after a crash to restore committed changes. Durability depends on the database configuration and storage guarantees, including whether an acknowledgement waits for the required flush. A log supports crash recovery; a separate backup and restore strategy is needed for disk loss or accidental deletion.\n\n## Indexes\n\n",
+        "score": 0.4192213714122772
+      },
+      {
+        "chunk_id": "39c65929282fa5042b634d76bdf057c1b4dcf6ff2b49dc9719224df655015518",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1443,
+        "end": 1912,
+        "text": "sponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. ",
+        "score": 0.39350029826164246
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h02",
+    "kind": "paraphrased",
+    "question": "Two workers both look up the same event identifier and see no record. Why can their subsequent updates still race, and what must enforce the decision?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 0.5,
+    "rejected_by_threshold": false,
+    "top_score": 0.39716848731040955,
+    "elapsed_ms_first_repeat": 3.5711250093299896,
+    "retrieved": [
+      {
+        "chunk_id": "d4a317aaf3e11b5f48d2cb5705606bccf785c2e1cafae9bafd3aba5d6283a559",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 730,
+        "end": 1075,
+        "text": "erialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\nWrite-ahead logging persists the log record before the corresponding changed data page is flushed.\n\n",
+        "score": 0.39716848731040955
+      },
+      {
+        "chunk_id": "007172c6c346e3b4e387f6e11019fc3b88ff78e7b125a709d40facc9fce76ef3",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 540,
+        "end": 969,
+        "text": "ers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\nPut a unique constraint on that ID. On redelivery, an existing ID means the business change has already committed, so the consumer can acknowledge without applying it again. A separate check followed by an insert is unsafe under concurrent consumers. The uniqueness constraint and transaction must enforce the decision together. ",
+        "score": 0.3921961486339569
+      },
+      {
+        "chunk_id": "5a5950310dd509927652711e9848a5ff322c712a764ebafd9db56a4d2c730f45",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 486,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\n",
+        "score": 0.3568856120109558
+      },
+      {
+        "chunk_id": "39c65929282fa5042b634d76bdf057c1b4dcf6ff2b49dc9719224df655015518",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1443,
+        "end": 1912,
+        "text": "sponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. ",
+        "score": 0.3551349341869354
+      },
+      {
+        "chunk_id": "2dbd2e3f2f02fe87f96e40556d4508cb444bddc23d77c8cb2083a7e80896ae65",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1812,
+        "end": 2051,
+        "text": "e worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.3544321656227112
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h03",
+    "kind": "paraphrased",
+    "question": "Two doctors each see another doctor on duty and both take themselves off the schedule. Can a consistent snapshot allow this outcome, and which documented isolation guarantee is stronger?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 1.0,
+    "rejected_by_threshold": false,
+    "top_score": 0.5693091154098511,
+    "elapsed_ms_first_repeat": 3.568542015273124,
+    "retrieved": [
+      {
+        "chunk_id": "d4a317aaf3e11b5f48d2cb5705606bccf785c2e1cafae9bafd3aba5d6283a559",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 730,
+        "end": 1075,
+        "text": "erialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\nWrite-ahead logging persists the log record before the corresponding changed data page is flushed.\n\n",
+        "score": 0.5693091154098511
+      },
+      {
+        "chunk_id": "0ad6153582e42a16192c7c8e86811e9426a14d303d7fb9c41c4ad42d9e07cef1",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 386,
+        "end": 830,
+        "text": "utomatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\nSerializable isolation makes committed transactions equivalent to some serial execution.\n\nA database can enforce this with locking or optimistic conflict detection. Applications must be prepared to retry a transaction that is aborted due to a serialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. ",
+        "score": 0.40572211146354675
+      },
+      {
+        "chunk_id": "c47a7210c48e6e46969138c4cad23f2e48b37382d276be27aeda6655ab6b314f",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 1446,
+        "end": 1884,
+        "text": "is only demonstrated useful when a restore has been tested and the restored data has been checked.\n\nDocument recovery point and recovery time objectives before choosing a schedule. A cache that can be reconstructed from authoritative records needs a different recovery procedure from the records themselves. Test interrupted writes and stale caches so the application cannot silently serve deleted or inconsistent data after restarting.\n\n",
+        "score": 0.3151392340660095
+      },
+      {
+        "chunk_id": "5a5950310dd509927652711e9848a5ff322c712a764ebafd9db56a4d2c730f45",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 486,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\n",
+        "score": 0.27371713519096375
+      },
+      {
+        "chunk_id": "2dbd2e3f2f02fe87f96e40556d4508cb444bddc23d77c8cb2083a7e80896ae65",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1812,
+        "end": 2051,
+        "text": "e worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.24335864186286926
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h04",
+    "kind": "multi_evidence",
+    "question": "In a three-copy store, clients read two copies and write two. Is overlap alone enough to prove linearizability, or what further issues matter?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 1.0,
+    "rejected_by_threshold": false,
+    "top_score": 0.6015018224716187,
+    "elapsed_ms_first_repeat": 3.4148749837186188,
+    "retrieved": [
+      {
+        "chunk_id": "684b3d8cfdf56b7a5bc7ee973fe3fd7f8533f10175bd8acc97e51c724a2840f1",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 952,
+        "end": 1451,
+        "text": "cation\n\nWith N replicas, read quorum R and write quorum W overlap when R plus W is greater than N.\n\nFor N equal to three, reading two replicas and writing two replicas creates overlap. Overlap alone is not a complete proof of linearizability: version ordering, concurrent writes and failure handling also matter. Availability depends on reaching enough replicas. Replication protects against some machine failures but does not replace backups against application-level corruption.\n\n## Backpressure\n\n",
+        "score": 0.6015018224716187
+      },
+      {
+        "chunk_id": "d4a317aaf3e11b5f48d2cb5705606bccf785c2e1cafae9bafd3aba5d6283a559",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 730,
+        "end": 1075,
+        "text": "erialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\nWrite-ahead logging persists the log record before the corresponding changed data page is flushed.\n\n",
+        "score": 0.35911455750465393
+      },
+      {
+        "chunk_id": "0ad6153582e42a16192c7c8e86811e9426a14d303d7fb9c41c4ad42d9e07cef1",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 386,
+        "end": 830,
+        "text": "utomatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\nSerializable isolation makes committed transactions equivalent to some serial execution.\n\nA database can enforce this with locking or optimistic conflict detection. Applications must be prepared to retry a transaction that is aborted due to a serialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. ",
+        "score": 0.3569723963737488
+      },
+      {
+        "chunk_id": "5a5950310dd509927652711e9848a5ff322c712a764ebafd9db56a4d2c730f45",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 486,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\n",
+        "score": 0.3201715350151062
+      },
+      {
+        "chunk_id": "5985cb4f85adbfd592764a4bf7f920349898a7ff3ce59da53620bf4eb4adc85a",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 869,
+        "end": 1174,
+        "text": "concurrent consumers. The uniqueness constraint and transaction must enforce the decision together. External side effects such as emails need their own idempotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\n",
+        "score": 0.29477500915527344
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h05",
+    "kind": "cross_document",
+    "question": "A team relies on its transaction log to recover from accidental deletion or disk loss. What additional recovery measure is called for, and how should its usefulness be demonstrated?",
+    "answerable": true,
+    "recall_at_3": 0.5,
+    "recall_at_5": 0.5,
+    "mrr_at_5": 1.0,
+    "rejected_by_threshold": false,
+    "top_score": 0.5659961700439453,
+    "elapsed_ms_first_repeat": 3.569332999177277,
+    "retrieved": [
+      {
+        "chunk_id": "2afd2c670bf0bfdc6d97d848bf4f0b6cae8b5e62ad7a30ac86b5187d76e9b779",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 975,
+        "end": 1430,
+        "text": "Write-ahead logging persists the log record before the corresponding changed data page is flushed.\n\nRecovery can replay durable log records after a crash to restore committed changes. Durability depends on the database configuration and storage guarantees, including whether an acknowledgement waits for the required flush. A log supports crash recovery; a separate backup and restore strategy is needed for disk loss or accidental deletion.\n\n## Indexes\n\n",
+        "score": 0.5659961700439453
+      },
+      {
+        "chunk_id": "c47a7210c48e6e46969138c4cad23f2e48b37382d276be27aeda6655ab6b314f",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 1446,
+        "end": 1884,
+        "text": "is only demonstrated useful when a restore has been tested and the restored data has been checked.\n\nDocument recovery point and recovery time objectives before choosing a schedule. A cache that can be reconstructed from authoritative records needs a different recovery procedure from the records themselves. Test interrupted writes and stale caches so the application cannot silently serve deleted or inconsistent data after restarting.\n\n",
+        "score": 0.43460655212402344
+      },
+      {
+        "chunk_id": "bbbb2d6f94392a2f0d977ab0b8fcd264cb9cdee9b87304466fd1453708d42c35",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 508,
+        "end": 972,
+        "text": "# Tracing\n\nA distributed trace links spans from multiple services using a shared trace identifier.\n\nEach span records an operation and its duration, making it possible to follow one request through dependencies. Logs provide detailed events, while metrics summarize aggregate behavior. Correlating these signals helps locate slow calls and failures. Avoid putting credentials or unnecessary personal data into trace attributes or logs.\n\n## Liveness and readiness\n\n",
+        "score": 0.40945500135421753
+      },
+      {
+        "chunk_id": "5a5950310dd509927652711e9848a5ff322c712a764ebafd9db56a4d2c730f45",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 486,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\n",
+        "score": 0.3534664809703827
+      },
+      {
+        "chunk_id": "a87f3691eb75b9fdc7cb38267e1d0ee2f3437b7d993a229bcec626719d5b9af9",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 323,
+        "end": 608,
+        "text": "e whether a measurement includes network transport, queue waiting, query encoding and index lookup. Small local experiments do not establish performance under production concurrency.\n\n## Tracing\n\nA distributed trace links spans from multiple services using a shared trace identifier.\n\n",
+        "score": 0.3501855731010437
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h06",
+    "kind": "multi_evidence",
+    "question": "A question needs two independent supporting facts. The first retrieved passage supplies one fact, but the other never appears. What are evidence recall and reciprocal rank, and why does the rank score hide incompleteness?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 1.0,
+    "rejected_by_threshold": false,
+    "top_score": 0.6508935689926147,
+    "elapsed_ms_first_repeat": 3.9104580064304173,
+    "retrieved": [
+      {
+        "chunk_id": "0cf5bf923175ee68f99fa30566e35698dc1bb4e083fa84ba78606e92ff2076a1",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 1354,
+        "end": 1801,
+        "text": "uestions with several evidence units. Unanswerable questions require a separate rejection measure.\n\n## Reciprocal rank\n\nReciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.\n\nMean reciprocal rank averages this quantity across questions. A relevant passage in position one contributes one; a first hit in position four contributes one quarter. A cutoff must be stated when retrieval is truncated. ",
+        "score": 0.6508935689926147
+      },
+      {
+        "chunk_id": "37123dcb667a4282e5cec46126031447003093e0271b46a1865e7145abd161df",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 1701,
+        "end": 1945,
+        "text": " hit in position four contributes one quarter. A cutoff must be stated when retrieval is truncated. Retrieval evaluation diagnoses the evidence selection stage separately from answer generation, whose faithfulness needs additional assessment.\n\n",
+        "score": 0.5208244323730469
+      },
+      {
+        "chunk_id": "d8317778fdcbb964f36fa5a52ba8b3a8c836f29b188cfbf1f2ce519a9684a6f0",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 959,
+        "end": 1454,
+        "text": "at k is the fraction of labeled relevant evidence units found among the first k retrieved results.\n\nIf a question requires two independent pieces of evidence and only one is retrieved, its evidence recall is one half. Average per-question recall over answerable questions and state the relevance definition. Hit rate asks only whether any relevant result appears; it is a different measure for questions with several evidence units. Unanswerable questions require a separate rejection measure.\n\n",
+        "score": 0.49463242292404175
+      },
+      {
+        "chunk_id": "2e75b5827c736accf29ba29b200d885a27ffe11c4b5c16bd227eebd2a9195def",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 724,
+        "end": 1059,
+        "text": "exceed the encoder input length. Paragraph-aware splitting attempts to preserve logical boundaries. Measure both retrieval quality and the resulting number of chunks rather than assuming one size is always superior.\n\n## Recall\n\nRecall at k is the fraction of labeled relevant evidence units found among the first k retrieved results.\n\n",
+        "score": 0.4239230751991272
+      },
+      {
+        "chunk_id": "2fa1c92ddcd19560ec4a50c2001a60457d1c6d78b141b8e6846fc6e35c1c5f2a",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 368,
+        "end": 824,
+        "text": "Model choice, domain vocabulary and input truncation all influence retrieval quality.\n\n## Chunking\n\nChunk overlap preserves nearby context at boundaries but increases storage and duplicate retrieval.\n\nSmall chunks can focus on one fact while omitting information needed to interpret it. Larger chunks offer more context but may dilute a specific topic and exceed the encoder input length. Paragraph-aware splitting attempts to preserve logical boundaries. ",
+        "score": 0.2653252184391022
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h07",
+    "kind": "unanswerable",
+    "question": "How many failed delivery attempts must occur before a message is moved to the dead-letter queue?",
+    "answerable": false,
+    "recall_at_3": null,
+    "recall_at_5": null,
+    "mrr_at_5": null,
+    "rejected_by_threshold": false,
+    "top_score": 0.6024990081787109,
+    "elapsed_ms_first_repeat": 2.886917005525902,
+    "retrieved": [
+      {
+        "chunk_id": "39c65929282fa5042b634d76bdf057c1b4dcf6ff2b49dc9719224df655015518",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1443,
+        "end": 1912,
+        "text": "sponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. ",
+        "score": 0.6024990081787109
+      },
+      {
+        "chunk_id": "caeefb75fedffff6fdb28e2a8625711a1dffb0501c3d63d7f072d8ca7bc8ab50",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 406,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. ",
+        "score": 0.5053034424781799
+      },
+      {
+        "chunk_id": "2dbd2e3f2f02fe87f96e40556d4508cb444bddc23d77c8cb2083a7e80896ae65",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1812,
+        "end": 2051,
+        "text": "e worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.36701589822769165
+      },
+      {
+        "chunk_id": "661713b89d1a6e0db04bc3ed22a28fca41b7572bf6a71b34c2a976baee69b44f",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 1676,
+        "end": 1903,
+        "text": "n run out of memory when its downstream service stalls. Monitor queue depth and time spent waiting. A bounded queue makes overload visible, but the application must decide whether to reject, delay or shed lower-priority work.\n\n",
+        "score": 0.3295372426509857
+      },
+      {
+        "chunk_id": "007172c6c346e3b4e387f6e11019fc3b88ff78e7b125a709d40facc9fce76ef3",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 540,
+        "end": 969,
+        "text": "ers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\nPut a unique constraint on that ID. On redelivery, an existing ID means the business change has already committed, so the consumer can acknowledge without applying it again. A separate check followed by an insert is unsafe under concurrent consumers. The uniqueness constraint and transaction must enforce the decision together. ",
+        "score": 0.3149845004081726
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h08",
+    "kind": "unanswerable",
+    "question": "Exactly how many seconds should the circuit breaker remain open before permitting a trial request?",
+    "answerable": false,
+    "recall_at_3": null,
+    "recall_at_5": null,
+    "mrr_at_5": null,
+    "rejected_by_threshold": false,
+    "top_score": 0.5428457260131836,
+    "elapsed_ms_first_repeat": 2.610750001622364,
+    "retrieved": [
+      {
+        "chunk_id": "09c49efc9f590086a643d97cf20c8905d9afbf46e431a3c693b9f3b97f5c902f",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 384,
+        "end": 842,
+        "text": "ll deadline through downstream requests so nested calls do not exceed the user-facing time budget.\n\n## Circuit breakers\n\nA circuit breaker temporarily stops calls to a failing dependency after a failure threshold is reached.\n\nThe open state fails quickly instead of repeatedly consuming connection and thread resources. After a delay, a half-open state permits a small number of trial calls. Success allows normal traffic again; failure reopens the breaker. ",
+        "score": 0.5428457260131836
+      },
+      {
+        "chunk_id": "e3692f4766fa1c2a36e9fc6eb6699f025c518867247af45d51ecf8ba70bbbd98",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 0,
+        "end": 484,
+        "text": "# Distributed Services\n\n## Timeouts\n\nA timeout means the caller did not receive a timely response; the remote operation may still have completed.\n\nA client that retries a payment after a timeout can therefore charge twice unless it reuses an idempotency key. Treat the outcome as unknown until it can be reconciled. Bound both the connection time and response time, and carry an overall deadline through downstream requests so nested calls do not exceed the user-facing time budget.\n\n",
+        "score": 0.28823962807655334
+      },
+      {
+        "chunk_id": "fd41d1f3fcc95d584814a351bb434e6d03a13aa52ca10036e00ea485eee4c523",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 742,
+        "end": 1052,
+        "text": "ts a small number of trial calls. Success allows normal traffic again; failure reopens the breaker. The breaker complements timeouts and retry budgets but does not repair the dependency itself.\n\n## Quorum replication\n\nWith N replicas, read quorum R and write quorum W overlap when R plus W is greater than N.\n\n",
+        "score": 0.2850172817707062
+      },
+      {
+        "chunk_id": "b08245602de7349b5d7a8078a3556a44de4dd90a2018313892408d1e1e21aed9",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 0,
+        "end": 423,
+        "text": "# Production Observability\n\n## Latency percentiles\n\nThe p95 latency is the duration at or below which approximately 95 percent of observed requests finish.\n\nA mean can hide slow tail requests, so report percentiles and sample counts. Warm timings exclude first-time model initialization, while cold timings include it. State whether a measurement includes network transport, queue waiting, query encoding and index lookup. ",
+        "score": 0.2594103217124939
+      },
+      {
+        "chunk_id": "39c65929282fa5042b634d76bdf057c1b4dcf6ff2b49dc9719224df655015518",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1443,
+        "end": 1912,
+        "text": "sponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. ",
+        "score": 0.2316512018442154
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h09",
+    "kind": "unanswerable",
+    "question": "For how many days should processed message IDs be retained before the deduplication table is purged?",
+    "answerable": false,
+    "recall_at_3": null,
+    "recall_at_5": null,
+    "mrr_at_5": null,
+    "rejected_by_threshold": false,
+    "top_score": 0.533729612827301,
+    "elapsed_ms_first_repeat": 2.989249973325059,
+    "retrieved": [
+      {
+        "chunk_id": "007172c6c346e3b4e387f6e11019fc3b88ff78e7b125a709d40facc9fce76ef3",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 540,
+        "end": 969,
+        "text": "ers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\nPut a unique constraint on that ID. On redelivery, an existing ID means the business change has already committed, so the consumer can acknowledge without applying it again. A separate check followed by an insert is unsafe under concurrent consumers. The uniqueness constraint and transaction must enforce the decision together. ",
+        "score": 0.533729612827301
+      },
+      {
+        "chunk_id": "24fd6deb190f26ae1fa9ee6420dbd4f72dd3208123e328928a34eeb693ed0fc3",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 306,
+        "end": 640,
+        "text": "business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.41234514117240906
+      },
+      {
+        "chunk_id": "39c65929282fa5042b634d76bdf057c1b4dcf6ff2b49dc9719224df655015518",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1443,
+        "end": 1912,
+        "text": "sponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. ",
+        "score": 0.39747506380081177
+      },
+      {
+        "chunk_id": "caeefb75fedffff6fdb28e2a8625711a1dffb0501c3d63d7f072d8ca7bc8ab50",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 406,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. ",
+        "score": 0.3639387786388397
+      },
+      {
+        "chunk_id": "2dbd2e3f2f02fe87f96e40556d4508cb444bddc23d77c8cb2083a7e80896ae65",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1812,
+        "end": 2051,
+        "text": "e worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.3532242774963379
+      }
+    ]
+  },
+  {
+    "configuration": "A",
+    "id": "h10",
+    "kind": "unanswerable",
+    "question": "Which cosine-similarity cutoff guarantees that 99 percent of generated answers are correct?",
+    "answerable": false,
+    "recall_at_3": null,
+    "recall_at_5": null,
+    "mrr_at_5": null,
+    "rejected_by_threshold": false,
+    "top_score": 0.45455509424209595,
+    "elapsed_ms_first_repeat": 2.593415993032977,
+    "retrieved": [
+      {
+        "chunk_id": "2fe0ba9b2b17d1dbcda0abcf552fe954ea6af9aee03f6ee574787941a9910971",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 0,
+        "end": 468,
+        "text": "# Retrieval Systems\n\n## Embeddings\n\nNormalized embeddings have unit length, so their inner product equals cosine similarity.\n\nA text encoder maps queries and passages to numerical vectors in the same embedding space. Similar meaning can be retrieved even when the wording differs. Semantic similarity is not a calibrated probability that a proposed answer is correct. Model choice, domain vocabulary and input truncation all influence retrieval quality.\n\n## Chunking\n\n",
+        "score": 0.45455509424209595
+      },
+      {
+        "chunk_id": "37123dcb667a4282e5cec46126031447003093e0271b46a1865e7145abd161df",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 1701,
+        "end": 1945,
+        "text": " hit in position four contributes one quarter. A cutoff must be stated when retrieval is truncated. Retrieval evaluation diagnoses the evidence selection stage separately from answer generation, whose faithfulness needs additional assessment.\n\n",
+        "score": 0.4227900505065918
+      },
+      {
+        "chunk_id": "2e75b5827c736accf29ba29b200d885a27ffe11c4b5c16bd227eebd2a9195def",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 724,
+        "end": 1059,
+        "text": "exceed the encoder input length. Paragraph-aware splitting attempts to preserve logical boundaries. Measure both retrieval quality and the resulting number of chunks rather than assuming one size is always superior.\n\n## Recall\n\nRecall at k is the fraction of labeled relevant evidence units found among the first k retrieved results.\n\n",
+        "score": 0.36013147234916687
+      },
+      {
+        "chunk_id": "0cf5bf923175ee68f99fa30566e35698dc1bb4e083fa84ba78606e92ff2076a1",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 1354,
+        "end": 1801,
+        "text": "uestions with several evidence units. Unanswerable questions require a separate rejection measure.\n\n## Reciprocal rank\n\nReciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.\n\nMean reciprocal rank averages this quantity across questions. A relevant passage in position one contributes one; a first hit in position four contributes one quarter. A cutoff must be stated when retrieval is truncated. ",
+        "score": 0.3519962728023529
+      },
+      {
+        "chunk_id": "2fa1c92ddcd19560ec4a50c2001a60457d1c6d78b141b8e6846fc6e35c1c5f2a",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 368,
+        "end": 824,
+        "text": "Model choice, domain vocabulary and input truncation all influence retrieval quality.\n\n## Chunking\n\nChunk overlap preserves nearby context at boundaries but increases storage and duplicate retrieval.\n\nSmall chunks can focus on one fact while omitting information needed to interpret it. Larger chunks offer more context but may dilute a specific topic and exceed the encoder input length. Paragraph-aware splitting attempts to preserve logical boundaries. ",
+        "score": 0.3416486084461212
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h01",
+    "kind": "multi_evidence",
+    "question": "The event publisher died after the broker accepted an event but before it saved its progress. Does saving events alongside business writes prevent another delivery, and what protection is still needed?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 0.5,
+    "rejected_by_threshold": false,
+    "top_score": 0.49407240748405457,
+    "elapsed_ms_first_repeat": 3.367083001649007,
+    "retrieved": [
+      {
+        "chunk_id": "577fecd0bb9d54247f2eea4e12245bd209cf08e9fe4c07095df6b61abb67366d",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 640,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.49407240748405457
+      },
+      {
+        "chunk_id": "cbba295327b227ec93ebf392faf9869a74b9ae07c8dbbc0c5a811be347480289",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1024,
+        "end": 1674,
+        "text": "mpotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\nA relay later reads unsent outbox rows and publishes them to the broker. A crash after publication but before recording success can publish the event again. Consumers still need deduplication. The outbox removes the gap in which a database commit succeeds but the corresponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\n",
+        "score": 0.4669686555862427
+      },
+      {
+        "chunk_id": "c26eba62cc6e9d565622a268944434b3fc1337e5a30e936d5856592af7f1a55a",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 490,
+        "end": 1174,
+        "text": "nger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\nPut a unique constraint on that ID. On redelivery, an existing ID means the business change has already committed, so the consumer can acknowledge without applying it again. A separate check followed by an insert is unsafe under concurrent consumers. The uniqueness constraint and transaction must enforce the decision together. External side effects such as emails need their own idempotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\n",
+        "score": 0.37317144870758057
+      },
+      {
+        "chunk_id": "a53d965066c20a876b6e032536b67b4651ac6ba498b3d163cfa96ddf1b848f76",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 825,
+        "end": 1535,
+        "text": "kew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\nWrite-ahead logging persists the log record before the corresponding changed data page is flushed.\n\nRecovery can replay durable log records after a crash to restore committed changes. Durability depends on the database configuration and storage guarantees, including whether an acknowledgement waits for the required flush. A log supports crash recovery; a separate backup and restore strategy is needed for disk loss or accidental deletion.\n\n## Indexes\n\nA B-tree index accelerates equality and range lookups while adding storage and write maintenance costs.\n\n",
+        "score": 0.35092848539352417
+      },
+      {
+        "chunk_id": "da073aab9e57fc4eeacfcb593b6f800fd75d7fb5b1605547395a4b5c26855c6f",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 975,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\nSerializable isolation makes committed transactions equivalent to some serial execution.\n\nA database can enforce this with locking or optimistic conflict detection. Applications must be prepared to retry a transaction that is aborted due to a serialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\n",
+        "score": 0.32367777824401855
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h02",
+    "kind": "paraphrased",
+    "question": "Two workers both look up the same event identifier and see no record. Why can their subsequent updates still race, and what must enforce the decision?",
+    "answerable": true,
+    "recall_at_3": 0.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 0.2,
+    "rejected_by_threshold": false,
+    "top_score": 0.36388975381851196,
+    "elapsed_ms_first_repeat": 3.211333998478949,
+    "retrieved": [
+      {
+        "chunk_id": "577fecd0bb9d54247f2eea4e12245bd209cf08e9fe4c07095df6b61abb67366d",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 640,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.36388975381851196
+      },
+      {
+        "chunk_id": "b2fa3f34ab76da320eef05d2aa09544ced7a9340203781873e511dd9309e72d6",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1524,
+        "end": 2051,
+        "text": "cts exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.3566562831401825
+      },
+      {
+        "chunk_id": "cbba295327b227ec93ebf392faf9869a74b9ae07c8dbbc0c5a811be347480289",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1024,
+        "end": 1674,
+        "text": "mpotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\nA relay later reads unsent outbox rows and publishes them to the broker. A crash after publication but before recording success can publish the event again. Consumers still need deduplication. The outbox removes the gap in which a database commit succeeds but the corresponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\n",
+        "score": 0.3536546528339386
+      },
+      {
+        "chunk_id": "da073aab9e57fc4eeacfcb593b6f800fd75d7fb5b1605547395a4b5c26855c6f",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 975,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\nSerializable isolation makes committed transactions equivalent to some serial execution.\n\nA database can enforce this with locking or optimistic conflict detection. Applications must be prepared to retry a transaction that is aborted due to a serialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\n",
+        "score": 0.34622249007225037
+      },
+      {
+        "chunk_id": "c26eba62cc6e9d565622a268944434b3fc1337e5a30e936d5856592af7f1a55a",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 490,
+        "end": 1174,
+        "text": "nger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\nPut a unique constraint on that ID. On redelivery, an existing ID means the business change has already committed, so the consumer can acknowledge without applying it again. A separate check followed by an insert is unsafe under concurrent consumers. The uniqueness constraint and transaction must enforce the decision together. External side effects such as emails need their own idempotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\n",
+        "score": 0.3276975452899933
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h03",
+    "kind": "paraphrased",
+    "question": "Two doctors each see another doctor on duty and both take themselves off the schedule. Can a consistent snapshot allow this outcome, and which documented isolation guarantee is stronger?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 1.0,
+    "rejected_by_threshold": false,
+    "top_score": 0.4944470524787903,
+    "elapsed_ms_first_repeat": 3.3043749863281846,
+    "retrieved": [
+      {
+        "chunk_id": "da073aab9e57fc4eeacfcb593b6f800fd75d7fb5b1605547395a4b5c26855c6f",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 975,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\nSerializable isolation makes committed transactions equivalent to some serial execution.\n\nA database can enforce this with locking or optimistic conflict detection. Applications must be prepared to retry a transaction that is aborted due to a serialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\n",
+        "score": 0.4944470524787903
+      },
+      {
+        "chunk_id": "a53d965066c20a876b6e032536b67b4651ac6ba498b3d163cfa96ddf1b848f76",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 825,
+        "end": 1535,
+        "text": "kew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\nWrite-ahead logging persists the log record before the corresponding changed data page is flushed.\n\nRecovery can replay durable log records after a crash to restore committed changes. Durability depends on the database configuration and storage guarantees, including whether an acknowledgement waits for the required flush. A log supports crash recovery; a separate backup and restore strategy is needed for disk loss or accidental deletion.\n\n## Indexes\n\nA B-tree index accelerates equality and range lookups while adding storage and write maintenance costs.\n\n",
+        "score": 0.3682830333709717
+      },
+      {
+        "chunk_id": "b2fa3f34ab76da320eef05d2aa09544ced7a9340203781873e511dd9309e72d6",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1524,
+        "end": 2051,
+        "text": "cts exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.3115728497505188
+      },
+      {
+        "chunk_id": "cd7e4c41de1522210c6e97df2850e65039d9d7dc398ad7c0cb7faf057c35cb1a",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 1396,
+        "end": 1884,
+        "text": "cessful inference.\n\n## Recovery testing\n\nA backup is only demonstrated useful when a restore has been tested and the restored data has been checked.\n\nDocument recovery point and recovery time objectives before choosing a schedule. A cache that can be reconstructed from authoritative records needs a different recovery procedure from the records themselves. Test interrupted writes and stale caches so the application cannot silently serve deleted or inconsistent data after restarting.\n\n",
+        "score": 0.28290998935699463
+      },
+      {
+        "chunk_id": "cbba295327b227ec93ebf392faf9869a74b9ae07c8dbbc0c5a811be347480289",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1024,
+        "end": 1674,
+        "text": "mpotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\nA relay later reads unsent outbox rows and publishes them to the broker. A crash after publication but before recording success can publish the event again. Consumers still need deduplication. The outbox removes the gap in which a database commit succeeds but the corresponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\n",
+        "score": 0.26412591338157654
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h04",
+    "kind": "multi_evidence",
+    "question": "In a three-copy store, clients read two copies and write two. Is overlap alone enough to prove linearizability, or what further issues matter?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 0.5,
+    "rejected_by_threshold": false,
+    "top_score": 0.3829834461212158,
+    "elapsed_ms_first_repeat": 3.146999981254339,
+    "retrieved": [
+      {
+        "chunk_id": "da073aab9e57fc4eeacfcb593b6f800fd75d7fb5b1605547395a4b5c26855c6f",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 975,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\nSerializable isolation makes committed transactions equivalent to some serial execution.\n\nA database can enforce this with locking or optimistic conflict detection. Applications must be prepared to retry a transaction that is aborted due to a serialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\n",
+        "score": 0.3829834461212158
+      },
+      {
+        "chunk_id": "e32041f93644b7d5f1da5a7819977a4be5040c9623eb84ad68faff6738272f14",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 810,
+        "end": 1547,
+        "text": "n; failure reopens the breaker. The breaker complements timeouts and retry budgets but does not repair the dependency itself.\n\n## Quorum replication\n\nWith N replicas, read quorum R and write quorum W overlap when R plus W is greater than N.\n\nFor N equal to three, reading two replicas and writing two replicas creates overlap. Overlap alone is not a complete proof of linearizability: version ordering, concurrent writes and failure handling also matter. Availability depends on reaching enough replicas. Replication protects against some machine failures but does not replace backups against application-level corruption.\n\n## Backpressure\n\nBackpressure slows producers when consumers cannot keep up, preventing unbounded queue growth.\n\n",
+        "score": 0.3267192840576172
+      },
+      {
+        "chunk_id": "a53d965066c20a876b6e032536b67b4651ac6ba498b3d163cfa96ddf1b848f76",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 825,
+        "end": 1535,
+        "text": "kew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\nWrite-ahead logging persists the log record before the corresponding changed data page is flushed.\n\nRecovery can replay durable log records after a crash to restore committed changes. Durability depends on the database configuration and storage guarantees, including whether an acknowledgement waits for the required flush. A log supports crash recovery; a separate backup and restore strategy is needed for disk loss or accidental deletion.\n\n## Indexes\n\nA B-tree index accelerates equality and range lookups while adding storage and write maintenance costs.\n\n",
+        "score": 0.2567256689071655
+      },
+      {
+        "chunk_id": "cbba295327b227ec93ebf392faf9869a74b9ae07c8dbbc0c5a811be347480289",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1024,
+        "end": 1674,
+        "text": "mpotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\nA relay later reads unsent outbox rows and publishes them to the broker. A crash after publication but before recording success can publish the event again. Consumers still need deduplication. The outbox removes the gap in which a database commit succeeds but the corresponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\n",
+        "score": 0.2470448613166809
+      },
+      {
+        "chunk_id": "577fecd0bb9d54247f2eea4e12245bd209cf08e9fe4c07095df6b61abb67366d",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 640,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.20774559676647186
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h05",
+    "kind": "cross_document",
+    "question": "A team relies on its transaction log to recover from accidental deletion or disk loss. What additional recovery measure is called for, and how should its usefulness be demonstrated?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 1.0,
+    "rejected_by_threshold": false,
+    "top_score": 0.6316916346549988,
+    "elapsed_ms_first_repeat": 3.2034169998951256,
+    "retrieved": [
+      {
+        "chunk_id": "a53d965066c20a876b6e032536b67b4651ac6ba498b3d163cfa96ddf1b848f76",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 825,
+        "end": 1535,
+        "text": "kew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\nWrite-ahead logging persists the log record before the corresponding changed data page is flushed.\n\nRecovery can replay durable log records after a crash to restore committed changes. Durability depends on the database configuration and storage guarantees, including whether an acknowledgement waits for the required flush. A log supports crash recovery; a separate backup and restore strategy is needed for disk loss or accidental deletion.\n\n## Indexes\n\nA B-tree index accelerates equality and range lookups while adding storage and write maintenance costs.\n\n",
+        "score": 0.6316916346549988
+      },
+      {
+        "chunk_id": "cd7e4c41de1522210c6e97df2850e65039d9d7dc398ad7c0cb7faf057c35cb1a",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 1396,
+        "end": 1884,
+        "text": "cessful inference.\n\n## Recovery testing\n\nA backup is only demonstrated useful when a restore has been tested and the restored data has been checked.\n\nDocument recovery point and recovery time objectives before choosing a schedule. A cache that can be reconstructed from authoritative records needs a different recovery procedure from the records themselves. Test interrupted writes and stale caches so the application cannot silently serve deleted or inconsistent data after restarting.\n\n",
+        "score": 0.434812068939209
+      },
+      {
+        "chunk_id": "da073aab9e57fc4eeacfcb593b6f800fd75d7fb5b1605547395a4b5c26855c6f",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 0,
+        "end": 975,
+        "text": "# Database Transactions\n\n## Atomicity\n\nAtomicity makes all writes in a transaction commit together or roll back together.\n\nFor a transfer between two accounts, debiting one balance and crediting the other belong in a single transaction. If a constraint fails, neither partial update should become visible as committed state. A transaction groups related state changes, but it does not automatically include external services such as a payment gateway or an email server.\n\n## Isolation\n\nSerializable isolation makes committed transactions equivalent to some serial execution.\n\nA database can enforce this with locking or optimistic conflict detection. Applications must be prepared to retry a transaction that is aborted due to a serialization conflict. Snapshot isolation provides a consistent snapshot but can permit write skew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\n",
+        "score": 0.3972770571708679
+      },
+      {
+        "chunk_id": "cbba295327b227ec93ebf392faf9869a74b9ae07c8dbbc0c5a811be347480289",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1024,
+        "end": 1674,
+        "text": "mpotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\nA relay later reads unsent outbox rows and publishes them to the broker. A crash after publication but before recording success can publish the event again. Consumers still need deduplication. The outbox removes the gap in which a database commit succeeds but the corresponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\n",
+        "score": 0.3692978620529175
+      },
+      {
+        "chunk_id": "ff70fbb6cd5c4a2f266656b8423049155801bf28ec925349afb2ce6c4d029b95",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 0,
+        "end": 972,
+        "text": "# Production Observability\n\n## Latency percentiles\n\nThe p95 latency is the duration at or below which approximately 95 percent of observed requests finish.\n\nA mean can hide slow tail requests, so report percentiles and sample counts. Warm timings exclude first-time model initialization, while cold timings include it. State whether a measurement includes network transport, queue waiting, query encoding and index lookup. Small local experiments do not establish performance under production concurrency.\n\n## Tracing\n\nA distributed trace links spans from multiple services using a shared trace identifier.\n\nEach span records an operation and its duration, making it possible to follow one request through dependencies. Logs provide detailed events, while metrics summarize aggregate behavior. Correlating these signals helps locate slow calls and failures. Avoid putting credentials or unnecessary personal data into trace attributes or logs.\n\n## Liveness and readiness\n\n",
+        "score": 0.3677685856819153
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h06",
+    "kind": "multi_evidence",
+    "question": "A question needs two independent supporting facts. The first retrieved passage supplies one fact, but the other never appears. What are evidence recall and reciprocal rank, and why does the rank score hide incompleteness?",
+    "answerable": true,
+    "recall_at_3": 1.0,
+    "recall_at_5": 1.0,
+    "mrr_at_5": 1.0,
+    "rejected_by_threshold": false,
+    "top_score": 0.6624547243118286,
+    "elapsed_ms_first_repeat": 3.3683749788906425,
+    "retrieved": [
+      {
+        "chunk_id": "9b2ff2682ebdbe272e1b1252c83fa13d4ff2c3de2f6c4785e6566960c74c7e9d",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 802,
+        "end": 1580,
+        "text": "e logical boundaries. Measure both retrieval quality and the resulting number of chunks rather than assuming one size is always superior.\n\n## Recall\n\nRecall at k is the fraction of labeled relevant evidence units found among the first k retrieved results.\n\nIf a question requires two independent pieces of evidence and only one is retrieved, its evidence recall is one half. Average per-question recall over answerable questions and state the relevance definition. Hit rate asks only whether any relevant result appears; it is a different measure for questions with several evidence units. Unanswerable questions require a separate rejection measure.\n\n## Reciprocal rank\n\nReciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.\n\n",
+        "score": 0.6624547243118286
+      },
+      {
+        "chunk_id": "05f1af66171fb7101f1f98ce1c37d2bfa09d7bddd228e6226bbfb3859d9b84a3",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 1430,
+        "end": 1945,
+        "text": "ate rejection measure.\n\n## Reciprocal rank\n\nReciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.\n\nMean reciprocal rank averages this quantity across questions. A relevant passage in position one contributes one; a first hit in position four contributes one quarter. A cutoff must be stated when retrieval is truncated. Retrieval evaluation diagnoses the evidence selection stage separately from answer generation, whose faithfulness needs additional assessment.\n\n",
+        "score": 0.5910487174987793
+      },
+      {
+        "chunk_id": "cd7e4c41de1522210c6e97df2850e65039d9d7dc398ad7c0cb7faf057c35cb1a",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 1396,
+        "end": 1884,
+        "text": "cessful inference.\n\n## Recovery testing\n\nA backup is only demonstrated useful when a restore has been tested and the restored data has been checked.\n\nDocument recovery point and recovery time objectives before choosing a schedule. A cache that can be reconstructed from authoritative records needs a different recovery procedure from the records themselves. Test interrupted writes and stale caches so the application cannot silently serve deleted or inconsistent data after restarting.\n\n",
+        "score": 0.33149832487106323
+      },
+      {
+        "chunk_id": "268c36c2250f3dbc4daf98caf0a0e4b95a42fd5495d89349dbb6ba580b5a7a3b",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 0,
+        "end": 952,
+        "text": "# Retrieval Systems\n\n## Embeddings\n\nNormalized embeddings have unit length, so their inner product equals cosine similarity.\n\nA text encoder maps queries and passages to numerical vectors in the same embedding space. Similar meaning can be retrieved even when the wording differs. Semantic similarity is not a calibrated probability that a proposed answer is correct. Model choice, domain vocabulary and input truncation all influence retrieval quality.\n\n## Chunking\n\nChunk overlap preserves nearby context at boundaries but increases storage and duplicate retrieval.\n\nSmall chunks can focus on one fact while omitting information needed to interpret it. Larger chunks offer more context but may dilute a specific topic and exceed the encoder input length. Paragraph-aware splitting attempts to preserve logical boundaries. Measure both retrieval quality and the resulting number of chunks rather than assuming one size is always superior.\n\n## Recall\n\n",
+        "score": 0.3041326403617859
+      },
+      {
+        "chunk_id": "577fecd0bb9d54247f2eea4e12245bd209cf08e9fe4c07095df6b61abb67366d",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 640,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.22581873834133148
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h07",
+    "kind": "unanswerable",
+    "question": "How many failed delivery attempts must occur before a message is moved to the dead-letter queue?",
+    "answerable": false,
+    "recall_at_3": null,
+    "recall_at_5": null,
+    "mrr_at_5": null,
+    "rejected_by_threshold": false,
+    "top_score": 0.5876086354255676,
+    "elapsed_ms_first_repeat": 2.542000001994893,
+    "retrieved": [
+      {
+        "chunk_id": "b2fa3f34ab76da320eef05d2aa09544ced7a9340203781873e511dd9309e72d6",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1524,
+        "end": 2051,
+        "text": "cts exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.5876086354255676
+      },
+      {
+        "chunk_id": "cbba295327b227ec93ebf392faf9869a74b9ae07c8dbbc0c5a811be347480289",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1024,
+        "end": 1674,
+        "text": "mpotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\nA relay later reads unsent outbox rows and publishes them to the broker. A crash after publication but before recording success can publish the event again. Consumers still need deduplication. The outbox removes the gap in which a database commit succeeds but the corresponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\n",
+        "score": 0.46162188053131104
+      },
+      {
+        "chunk_id": "577fecd0bb9d54247f2eea4e12245bd209cf08e9fe4c07095df6b61abb67366d",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 640,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.4195007085800171
+      },
+      {
+        "chunk_id": "132adb9abc7f52ee85dd483aa8309b48faece44136b382f428758ed549cf3c28",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 0,
+        "end": 960,
+        "text": "# Distributed Services\n\n## Timeouts\n\nA timeout means the caller did not receive a timely response; the remote operation may still have completed.\n\nA client that retries a payment after a timeout can therefore charge twice unless it reuses an idempotency key. Treat the outcome as unknown until it can be reconciled. Bound both the connection time and response time, and carry an overall deadline through downstream requests so nested calls do not exceed the user-facing time budget.\n\n## Circuit breakers\n\nA circuit breaker temporarily stops calls to a failing dependency after a failure threshold is reached.\n\nThe open state fails quickly instead of repeatedly consuming connection and thread resources. After a delay, a half-open state permits a small number of trial calls. Success allows normal traffic again; failure reopens the breaker. The breaker complements timeouts and retry budgets but does not repair the dependency itself.\n\n## Quorum replication\n\n",
+        "score": 0.34531912207603455
+      },
+      {
+        "chunk_id": "015fe8ef218a354d5578e9640ec61c0eab1882d79b42e13b01056c38ea6efdb6",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 822,
+        "end": 1546,
+        "text": "lps locate slow calls and failures. Avoid putting credentials or unnecessary personal data into trace attributes or logs.\n\n## Liveness and readiness\n\nLiveness checks whether a process is alive; readiness checks whether it can serve its intended traffic.\n\nA process can answer a liveness probe while its required database is unavailable. Readiness should reflect dependencies needed for serving, with care to avoid cascading restarts during an outage. A configured API endpoint is not proof that the remote model is reachable. Separate configuration status from an actual successful inference.\n\n## Recovery testing\n\nA backup is only demonstrated useful when a restore has been tested and the restored data has been checked.\n\n",
+        "score": 0.28644728660583496
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h08",
+    "kind": "unanswerable",
+    "question": "Exactly how many seconds should the circuit breaker remain open before permitting a trial request?",
+    "answerable": false,
+    "recall_at_3": null,
+    "recall_at_5": null,
+    "mrr_at_5": null,
+    "rejected_by_threshold": false,
+    "top_score": 0.37833577394485474,
+    "elapsed_ms_first_repeat": 2.498999994713813,
+    "retrieved": [
+      {
+        "chunk_id": "132adb9abc7f52ee85dd483aa8309b48faece44136b382f428758ed549cf3c28",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 0,
+        "end": 960,
+        "text": "# Distributed Services\n\n## Timeouts\n\nA timeout means the caller did not receive a timely response; the remote operation may still have completed.\n\nA client that retries a payment after a timeout can therefore charge twice unless it reuses an idempotency key. Treat the outcome as unknown until it can be reconciled. Bound both the connection time and response time, and carry an overall deadline through downstream requests so nested calls do not exceed the user-facing time budget.\n\n## Circuit breakers\n\nA circuit breaker temporarily stops calls to a failing dependency after a failure threshold is reached.\n\nThe open state fails quickly instead of repeatedly consuming connection and thread resources. After a delay, a half-open state permits a small number of trial calls. Success allows normal traffic again; failure reopens the breaker. The breaker complements timeouts and retry budgets but does not repair the dependency itself.\n\n## Quorum replication\n\n",
+        "score": 0.37833577394485474
+      },
+      {
+        "chunk_id": "e32041f93644b7d5f1da5a7819977a4be5040c9623eb84ad68faff6738272f14",
+        "document_id": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+        "document_name": "distributed_services.md",
+        "page": null,
+        "start": 810,
+        "end": 1547,
+        "text": "n; failure reopens the breaker. The breaker complements timeouts and retry budgets but does not repair the dependency itself.\n\n## Quorum replication\n\nWith N replicas, read quorum R and write quorum W overlap when R plus W is greater than N.\n\nFor N equal to three, reading two replicas and writing two replicas creates overlap. Overlap alone is not a complete proof of linearizability: version ordering, concurrent writes and failure handling also matter. Availability depends on reaching enough replicas. Replication protects against some machine failures but does not replace backups against application-level corruption.\n\n## Backpressure\n\nBackpressure slows producers when consumers cannot keep up, preventing unbounded queue growth.\n\n",
+        "score": 0.2410992532968521
+      },
+      {
+        "chunk_id": "ff70fbb6cd5c4a2f266656b8423049155801bf28ec925349afb2ce6c4d029b95",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 0,
+        "end": 972,
+        "text": "# Production Observability\n\n## Latency percentiles\n\nThe p95 latency is the duration at or below which approximately 95 percent of observed requests finish.\n\nA mean can hide slow tail requests, so report percentiles and sample counts. Warm timings exclude first-time model initialization, while cold timings include it. State whether a measurement includes network transport, queue waiting, query encoding and index lookup. Small local experiments do not establish performance under production concurrency.\n\n## Tracing\n\nA distributed trace links spans from multiple services using a shared trace identifier.\n\nEach span records an operation and its duration, making it possible to follow one request through dependencies. Logs provide detailed events, while metrics summarize aggregate behavior. Correlating these signals helps locate slow calls and failures. Avoid putting credentials or unnecessary personal data into trace attributes or logs.\n\n## Liveness and readiness\n\n",
+        "score": 0.23676985502243042
+      },
+      {
+        "chunk_id": "b2fa3f34ab76da320eef05d2aa09544ced7a9340203781873e511dd9309e72d6",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1524,
+        "end": 2051,
+        "text": "cts exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.22200876474380493
+      },
+      {
+        "chunk_id": "cd7e4c41de1522210c6e97df2850e65039d9d7dc398ad7c0cb7faf057c35cb1a",
+        "document_id": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+        "document_name": "production_observability.md",
+        "page": null,
+        "start": 1396,
+        "end": 1884,
+        "text": "cessful inference.\n\n## Recovery testing\n\nA backup is only demonstrated useful when a restore has been tested and the restored data has been checked.\n\nDocument recovery point and recovery time objectives before choosing a schedule. A cache that can be reconstructed from authoritative records needs a different recovery procedure from the records themselves. Test interrupted writes and stale caches so the application cannot silently serve deleted or inconsistent data after restarting.\n\n",
+        "score": 0.20608487725257874
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h09",
+    "kind": "unanswerable",
+    "question": "For how many days should processed message IDs be retained before the deduplication table is purged?",
+    "answerable": false,
+    "recall_at_3": null,
+    "recall_at_5": null,
+    "mrr_at_5": null,
+    "rejected_by_threshold": false,
+    "top_score": 0.5120495557785034,
+    "elapsed_ms_first_repeat": 2.6110839971806854,
+    "retrieved": [
+      {
+        "chunk_id": "577fecd0bb9d54247f2eea4e12245bd209cf08e9fe4c07095df6b61abb67366d",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 640,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.5120495557785034
+      },
+      {
+        "chunk_id": "b2fa3f34ab76da320eef05d2aa09544ced7a9340203781873e511dd9309e72d6",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1524,
+        "end": 2051,
+        "text": "cts exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.4232984185218811
+      },
+      {
+        "chunk_id": "c26eba62cc6e9d565622a268944434b3fc1337e5a30e936d5856592af7f1a55a",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 490,
+        "end": 1174,
+        "text": "nger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\nPut a unique constraint on that ID. On redelivery, an existing ID means the business change has already committed, so the consumer can acknowledge without applying it again. A separate check followed by an insert is unsafe under concurrent consumers. The uniqueness constraint and transaction must enforce the decision together. External side effects such as emails need their own idempotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\n",
+        "score": 0.3857406973838806
+      },
+      {
+        "chunk_id": "cbba295327b227ec93ebf392faf9869a74b9ae07c8dbbc0c5a811be347480289",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1024,
+        "end": 1674,
+        "text": "mpotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\nA relay later reads unsent outbox rows and publishes them to the broker. A crash after publication but before recording success can publish the event again. Consumers still need deduplication. The outbox removes the gap in which a database commit succeeds but the corresponding event is never scheduled for delivery. It does not make all network effects exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\n",
+        "score": 0.35589006543159485
+      },
+      {
+        "chunk_id": "a53d965066c20a876b6e032536b67b4651ac6ba498b3d163cfa96ddf1b848f76",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 825,
+        "end": 1535,
+        "text": "kew. For example, two doctors may each observe another doctor on call and independently remove themselves from the schedule.\n\n## Write-ahead logging\n\nWrite-ahead logging persists the log record before the corresponding changed data page is flushed.\n\nRecovery can replay durable log records after a crash to restore committed changes. Durability depends on the database configuration and storage guarantees, including whether an acknowledgement waits for the required flush. A log supports crash recovery; a separate backup and restore strategy is needed for disk loss or accidental deletion.\n\n## Indexes\n\nA B-tree index accelerates equality and range lookups while adding storage and write maintenance costs.\n\n",
+        "score": 0.3482218384742737
+      }
+    ]
+  },
+  {
+    "configuration": "B",
+    "id": "h10",
+    "kind": "unanswerable",
+    "question": "Which cosine-similarity cutoff guarantees that 99 percent of generated answers are correct?",
+    "answerable": false,
+    "recall_at_3": null,
+    "recall_at_5": null,
+    "mrr_at_5": null,
+    "rejected_by_threshold": false,
+    "top_score": 0.4675082564353943,
+    "elapsed_ms_first_repeat": 2.594416990177706,
+    "retrieved": [
+      {
+        "chunk_id": "268c36c2250f3dbc4daf98caf0a0e4b95a42fd5495d89349dbb6ba580b5a7a3b",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 0,
+        "end": 952,
+        "text": "# Retrieval Systems\n\n## Embeddings\n\nNormalized embeddings have unit length, so their inner product equals cosine similarity.\n\nA text encoder maps queries and passages to numerical vectors in the same embedding space. Similar meaning can be retrieved even when the wording differs. Semantic similarity is not a calibrated probability that a proposed answer is correct. Model choice, domain vocabulary and input truncation all influence retrieval quality.\n\n## Chunking\n\nChunk overlap preserves nearby context at boundaries but increases storage and duplicate retrieval.\n\nSmall chunks can focus on one fact while omitting information needed to interpret it. Larger chunks offer more context but may dilute a specific topic and exceed the encoder input length. Paragraph-aware splitting attempts to preserve logical boundaries. Measure both retrieval quality and the resulting number of chunks rather than assuming one size is always superior.\n\n## Recall\n\n",
+        "score": 0.4675082564353943
+      },
+      {
+        "chunk_id": "9b2ff2682ebdbe272e1b1252c83fa13d4ff2c3de2f6c4785e6566960c74c7e9d",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 802,
+        "end": 1580,
+        "text": "e logical boundaries. Measure both retrieval quality and the resulting number of chunks rather than assuming one size is always superior.\n\n## Recall\n\nRecall at k is the fraction of labeled relevant evidence units found among the first k retrieved results.\n\nIf a question requires two independent pieces of evidence and only one is retrieved, its evidence recall is one half. Average per-question recall over answerable questions and state the relevance definition. Hit rate asks only whether any relevant result appears; it is a different measure for questions with several evidence units. Unanswerable questions require a separate rejection measure.\n\n## Reciprocal rank\n\nReciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.\n\n",
+        "score": 0.3714752793312073
+      },
+      {
+        "chunk_id": "05f1af66171fb7101f1f98ce1c37d2bfa09d7bddd228e6226bbfb3859d9b84a3",
+        "document_id": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5",
+        "document_name": "retrieval_systems.md",
+        "page": null,
+        "start": 1430,
+        "end": 1945,
+        "text": "ate rejection measure.\n\n## Reciprocal rank\n\nReciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.\n\nMean reciprocal rank averages this quantity across questions. A relevant passage in position one contributes one; a first hit in position four contributes one quarter. A cutoff must be stated when retrieval is truncated. Retrieval evaluation diagnoses the evidence selection stage separately from answer generation, whose faithfulness needs additional assessment.\n\n",
+        "score": 0.301058828830719
+      },
+      {
+        "chunk_id": "b2fa3f34ab76da320eef05d2aa09544ced7a9340203781873e511dd9309e72d6",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 1524,
+        "end": 2051,
+        "text": "cts exactly once.\n\n## Retries and poison messages\n\nA dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.\n\nTransient errors can be retried using exponential backoff and jitter. Set a retry budget so one invalid message does not consume the entire worker pool. Preserve the original message ID, error details and attempt count for investigation. Operators should repair the cause before replaying failed messages. A retry policy cannot make a non-idempotent operation safe by itself.\n\n",
+        "score": 0.12498578429222107
+      },
+      {
+        "chunk_id": "aeb3b5c8f1c5f93ad8d08e021a9c3176db5920d4df7988eea3576019eda5a211",
+        "document_id": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+        "document_name": "database_transactions.md",
+        "page": null,
+        "start": 1385,
+        "end": 1876,
+        "text": "sk loss or accidental deletion.\n\n## Indexes\n\nA B-tree index accelerates equality and range lookups while adding storage and write maintenance costs.\n\nThe query planner can locate matching keys without scanning every table row. Updating indexed columns also updates the index, so an index is not free for write-heavy workloads. Composite indexes depend on column order and the predicates used by the query. Measure execution plans and workload latency before adding indexes to every column.\n\n",
+        "score": 0.11309699714183807
+      }
+    ]
+  }
+]

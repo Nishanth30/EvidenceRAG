@@ -1,0 +1,3 @@
+configuration,strategy,chunk_size,overlap,chunks,queries,answerable_queries,unanswerable_queries,timed_retrievals,recall_at_3,recall_at_5,mrr_at_5,negative_rejection_rate,answerable_rejection_rate,threshold,latency_mean_ms,latency_p50_ms,latency_p95_ms,latency_min_ms,latency_max_ms
+A,recursive,500,100,31,10,6,4,30,0.9166666666666666,0.9166666666666666,0.9166666666666666,0.0,0.0,0.3,3.1101901976702115,3.191124487784691,3.570318604761269,2.485916978912428,3.9104580064304173
+B,recursive,1000,150,16,10,6,4,30,0.8333333333333334,1.0,0.7000000000000001,0.0,0.0,0.3,3.016340362955816,3.1634164770366624,3.389056406740565,2.488875004928559,3.70775000192225

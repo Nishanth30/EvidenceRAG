@@ -1,0 +1,390 @@
+[
+  {
+    "id": "q01",
+    "verified_anchors": [
+      {
+        "document": "message_delivery.md",
+        "page": null,
+        "quote": "A consumer acknowledges a message only after its durable business transaction commits.",
+        "verified_start": 41,
+        "verified_end": 127,
+        "verified_line": 5
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q02",
+    "verified_anchors": [
+      {
+        "document": "message_delivery.md",
+        "page": null,
+        "quote": "Store the message ID in a deduplication table in the same transaction as the business update.",
+        "verified_start": 545,
+        "verified_end": 638,
+        "verified_line": 11
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q03",
+    "verified_anchors": [
+      {
+        "document": "message_delivery.md",
+        "page": null,
+        "quote": "The transactional outbox stores the business change and an outgoing event in one database transaction.",
+        "verified_start": 1070,
+        "verified_end": 1172,
+        "verified_line": 17
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q04",
+    "verified_anchors": [
+      {
+        "document": "message_delivery.md",
+        "page": null,
+        "quote": "A dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed.",
+        "verified_start": 1575,
+        "verified_end": 1672,
+        "verified_line": 23
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q05",
+    "verified_anchors": [
+      {
+        "document": "database_transactions.md",
+        "page": null,
+        "quote": "Atomicity makes all writes in a transaction commit together or roll back together.",
+        "verified_start": 39,
+        "verified_end": 121,
+        "verified_line": 5
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q06",
+    "verified_anchors": [
+      {
+        "document": "database_transactions.md",
+        "page": null,
+        "quote": "Serializable isolation makes committed transactions equivalent to some serial execution.",
+        "verified_start": 486,
+        "verified_end": 574,
+        "verified_line": 11
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q07",
+    "verified_anchors": [
+      {
+        "document": "database_transactions.md",
+        "page": null,
+        "quote": "Write-ahead logging persists the log record before the corresponding changed data page is flushed.",
+        "verified_start": 975,
+        "verified_end": 1073,
+        "verified_line": 17
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q08",
+    "verified_anchors": [
+      {
+        "document": "database_transactions.md",
+        "page": null,
+        "quote": "A B-tree index accelerates equality and range lookups while adding storage and write maintenance costs.",
+        "verified_start": 1430,
+        "verified_end": 1533,
+        "verified_line": 23
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q09",
+    "verified_anchors": [
+      {
+        "document": "distributed_services.md",
+        "page": null,
+        "quote": "A timeout means the caller did not receive a timely response; the remote operation may still have completed.",
+        "verified_start": 37,
+        "verified_end": 145,
+        "verified_line": 5
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q10",
+    "verified_anchors": [
+      {
+        "document": "distributed_services.md",
+        "page": null,
+        "quote": "A circuit breaker temporarily stops calls to a failing dependency after a failure threshold is reached.",
+        "verified_start": 505,
+        "verified_end": 608,
+        "verified_line": 11
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q11",
+    "verified_anchors": [
+      {
+        "document": "distributed_services.md",
+        "page": null,
+        "quote": "With N replicas, read quorum R and write quorum W overlap when R plus W is greater than N.",
+        "verified_start": 960,
+        "verified_end": 1050,
+        "verified_line": 17
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q12",
+    "verified_anchors": [
+      {
+        "document": "distributed_services.md",
+        "page": null,
+        "quote": "Backpressure slows producers when consumers cannot keep up, preventing unbounded queue growth.",
+        "verified_start": 1451,
+        "verified_end": 1545,
+        "verified_line": 23
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q13",
+    "verified_anchors": [
+      {
+        "document": "retrieval_systems.md",
+        "page": null,
+        "quote": "Normalized embeddings have unit length, so their inner product equals cosine similarity.",
+        "verified_start": 36,
+        "verified_end": 124,
+        "verified_line": 5
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q14",
+    "verified_anchors": [
+      {
+        "document": "retrieval_systems.md",
+        "page": null,
+        "quote": "Chunk overlap preserves nearby context at boundaries but increases storage and duplicate retrieval.",
+        "verified_start": 468,
+        "verified_end": 567,
+        "verified_line": 11
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q15",
+    "verified_anchors": [
+      {
+        "document": "retrieval_systems.md",
+        "page": null,
+        "quote": "Recall at k is the fraction of labeled relevant evidence units found among the first k retrieved results.",
+        "verified_start": 952,
+        "verified_end": 1057,
+        "verified_line": 17
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q16",
+    "verified_anchors": [
+      {
+        "document": "retrieval_systems.md",
+        "page": null,
+        "quote": "Reciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.",
+        "verified_start": 1474,
+        "verified_end": 1578,
+        "verified_line": 23
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q17",
+    "verified_anchors": [
+      {
+        "document": "production_observability.md",
+        "page": null,
+        "quote": "The p95 latency is the duration at or below which approximately 95 percent of observed requests finish.",
+        "verified_start": 52,
+        "verified_end": 155,
+        "verified_line": 5
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q18",
+    "verified_anchors": [
+      {
+        "document": "production_observability.md",
+        "page": null,
+        "quote": "A distributed trace links spans from multiple services using a shared trace identifier.",
+        "verified_start": 519,
+        "verified_end": 606,
+        "verified_line": 11
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q19",
+    "verified_anchors": [
+      {
+        "document": "production_observability.md",
+        "page": null,
+        "quote": "Liveness checks whether a process is alive; readiness checks whether it can serve its intended traffic.",
+        "verified_start": 972,
+        "verified_end": 1075,
+        "verified_line": 17
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q20",
+    "verified_anchors": [
+      {
+        "document": "production_observability.md",
+        "page": null,
+        "quote": "A backup is only demonstrated useful when a restore has been tested and the restored data has been checked.",
+        "verified_start": 1437,
+        "verified_end": 1544,
+        "verified_line": 23
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q21",
+    "verified_anchors": [
+      {
+        "document": "message_delivery.md",
+        "page": null,
+        "quote": "A consumer acknowledges a message only after its durable business transaction commits.",
+        "verified_start": 41,
+        "verified_end": 127,
+        "verified_line": 5
+      },
+      {
+        "document": "message_delivery.md",
+        "page": null,
+        "quote": "Store the message ID in a deduplication table in the same transaction as the business update.",
+        "verified_start": 545,
+        "verified_end": 638,
+        "verified_line": 11
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q22",
+    "verified_anchors": [
+      {
+        "document": "distributed_services.md",
+        "page": null,
+        "quote": "A timeout means the caller did not receive a timely response; the remote operation may still have completed.",
+        "verified_start": 37,
+        "verified_end": 145,
+        "verified_line": 5
+      },
+      {
+        "document": "message_delivery.md",
+        "page": null,
+        "quote": "Store the message ID in a deduplication table in the same transaction as the business update.",
+        "verified_start": 545,
+        "verified_end": 638,
+        "verified_line": 11
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q23",
+    "verified_anchors": [
+      {
+        "document": "retrieval_systems.md",
+        "page": null,
+        "quote": "Recall at k is the fraction of labeled relevant evidence units found among the first k retrieved results.",
+        "verified_start": 952,
+        "verified_end": 1057,
+        "verified_line": 17
+      },
+      {
+        "document": "retrieval_systems.md",
+        "page": null,
+        "quote": "Reciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.",
+        "verified_start": 1474,
+        "verified_end": 1578,
+        "verified_line": 23
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q24",
+    "verified_anchors": [
+      {
+        "document": "distributed_services.md",
+        "page": null,
+        "quote": "A circuit breaker temporarily stops calls to a failing dependency after a failure threshold is reached.",
+        "verified_start": 505,
+        "verified_end": 608,
+        "verified_line": 11
+      },
+      {
+        "document": "distributed_services.md",
+        "page": null,
+        "quote": "Backpressure slows producers when consumers cannot keep up, preventing unbounded queue growth.",
+        "verified_start": 1451,
+        "verified_end": 1545,
+        "verified_line": 23
+      }
+    ],
+    "answerable": true
+  },
+  {
+    "id": "q25",
+    "verified_anchors": [],
+    "answerable": false
+  },
+  {
+    "id": "q26",
+    "verified_anchors": [],
+    "answerable": false
+  },
+  {
+    "id": "q27",
+    "verified_anchors": [],
+    "answerable": false
+  },
+  {
+    "id": "q28",
+    "verified_anchors": [],
+    "answerable": false
+  }
+]

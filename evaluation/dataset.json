@@ -1,0 +1,338 @@
+{
+  "provenance": "AI-authored educational documents and candidate questions, checked for exact evidence presence by code. Not independently human-validated; not a held-out benchmark.",
+  "license": "CC0-1.0 for this sample corpus and dataset",
+  "questions": [
+    {
+      "id": "q01",
+      "question": "When should a consumer acknowledge a message?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "A consumer acknowledges a message only after its durable business transaction commits."
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "question": "How do we avoid applying a business change twice after redelivery?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "Store the message ID in a deduplication table in the same transaction as the business update."
+        }
+      ]
+    },
+    {
+      "id": "q03",
+      "question": "How can a committed database update reliably schedule an event for publication?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "The transactional outbox stores the business change and an outgoing event in one database transaction."
+        }
+      ]
+    },
+    {
+      "id": "q04",
+      "question": "Where should messages that keep failing be put?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "A dead-letter queue isolates messages that repeatedly fail so they can be inspected and replayed."
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "question": "What prevents a bank transfer from committing only the debit?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "database_transactions.md",
+          "page": null,
+          "quote": "Atomicity makes all writes in a transaction commit together or roll back together."
+        }
+      ]
+    },
+    {
+      "id": "q06",
+      "question": "Which isolation guarantee corresponds to running transactions one after another?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "database_transactions.md",
+          "page": null,
+          "quote": "Serializable isolation makes committed transactions equivalent to some serial execution."
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "question": "What must be persisted before a modified database page is flushed?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "database_transactions.md",
+          "page": null,
+          "quote": "Write-ahead logging persists the log record before the corresponding changed data page is flushed."
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "question": "Which index supports key ranges, and what does it cost for writes?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "database_transactions.md",
+          "page": null,
+          "quote": "A B-tree index accelerates equality and range lookups while adding storage and write maintenance costs."
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "question": "Does a timeout prove that a remote payment did not happen?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "A timeout means the caller did not receive a timely response; the remote operation may still have completed."
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "question": "How can a service stop repeatedly calling a dependency that is failing?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "A circuit breaker temporarily stops calls to a failing dependency after a failure threshold is reached."
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "question": "What condition makes read and write quorums overlap?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "With N replicas, read quorum R and write quorum W overlap when R plus W is greater than N."
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "question": "How can producers avoid exhausting memory when consumers fall behind?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "Backpressure slows producers when consumers cannot keep up, preventing unbounded queue growth."
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "question": "Why can inner product be used for cosine search with unit vectors?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "retrieval_systems.md",
+          "page": null,
+          "quote": "Normalized embeddings have unit length, so their inner product equals cosine similarity."
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "question": "What are the benefits and costs of overlapping chunks?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "retrieval_systems.md",
+          "page": null,
+          "quote": "Chunk overlap preserves nearby context at boundaries but increases storage and duplicate retrieval."
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "question": "What fraction does evidence Recall@k measure?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "retrieval_systems.md",
+          "page": null,
+          "quote": "Recall at k is the fraction of labeled relevant evidence units found among the first k retrieved results."
+        }
+      ]
+    },
+    {
+      "id": "q16",
+      "question": "How is reciprocal rank calculated if the first relevant passage is fourth?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "retrieval_systems.md",
+          "page": null,
+          "quote": "Reciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved."
+        }
+      ]
+    },
+    {
+      "id": "q17",
+      "question": "What does the 95th percentile request duration mean?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "production_observability.md",
+          "page": null,
+          "quote": "The p95 latency is the duration at or below which approximately 95 percent of observed requests finish."
+        }
+      ]
+    },
+    {
+      "id": "q18",
+      "question": "How are operations across different services connected in a trace?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "production_observability.md",
+          "page": null,
+          "quote": "A distributed trace links spans from multiple services using a shared trace identifier."
+        }
+      ]
+    },
+    {
+      "id": "q19",
+      "question": "How does readiness differ from liveness?",
+      "kind": "direct",
+      "evidence": [
+        {
+          "document": "production_observability.md",
+          "page": null,
+          "quote": "Liveness checks whether a process is alive; readiness checks whether it can serve its intended traffic."
+        }
+      ]
+    },
+    {
+      "id": "q20",
+      "question": "How do we verify that a backup can actually recover data?",
+      "kind": "paraphrased",
+      "evidence": [
+        {
+          "document": "production_observability.md",
+          "page": null,
+          "quote": "A backup is only demonstrated useful when a restore has been tested and the restored data has been checked."
+        }
+      ]
+    },
+    {
+      "id": "q21",
+      "question": "How do acknowledgement timing and transactional deduplication work together after a consumer crash?",
+      "kind": "multi_evidence",
+      "evidence": [
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "A consumer acknowledges a message only after its durable business transaction commits."
+        },
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "Store the message ID in a deduplication table in the same transaction as the business update."
+        }
+      ]
+    },
+    {
+      "id": "q22",
+      "question": "What do timeouts tell a caller, and why are idempotent consumer updates needed on retries?",
+      "kind": "multi_evidence",
+      "evidence": [
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "A timeout means the caller did not receive a timely response; the remote operation may still have completed."
+        },
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "Store the message ID in a deduplication table in the same transaction as the business update."
+        }
+      ]
+    },
+    {
+      "id": "q23",
+      "question": "How do recall and reciprocal rank measure different aspects of retrieval?",
+      "kind": "multi_evidence",
+      "evidence": [
+        {
+          "document": "retrieval_systems.md",
+          "page": null,
+          "quote": "Recall at k is the fraction of labeled relevant evidence units found among the first k retrieved results."
+        },
+        {
+          "document": "retrieval_systems.md",
+          "page": null,
+          "quote": "Reciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved."
+        }
+      ]
+    },
+    {
+      "id": "q24",
+      "question": "How do circuit breakers and backpressure protect an overloaded service?",
+      "kind": "multi_evidence",
+      "evidence": [
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "A circuit breaker temporarily stops calls to a failing dependency after a failure threshold is reached."
+        },
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "Backpressure slows producers when consumers cannot keep up, preventing unbounded queue growth."
+        }
+      ]
+    },
+    {
+      "id": "q25",
+      "question": "What is the capital of Peru?",
+      "kind": "unanswerable",
+      "evidence": []
+    },
+    {
+      "id": "q26",
+      "question": "What exact Kafka retention setting does our company use?",
+      "kind": "unanswerable",
+      "evidence": []
+    },
+    {
+      "id": "q27",
+      "question": "How much does our cloud provider charge per million messages?",
+      "kind": "unanswerable",
+      "evidence": []
+    },
+    {
+      "id": "q28",
+      "question": "Which medication should be used to treat a migraine?",
+      "kind": "unanswerable",
+      "evidence": []
+    }
+  ]
+}

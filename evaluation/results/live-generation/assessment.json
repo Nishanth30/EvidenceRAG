@@ -1,0 +1,28 @@
+{
+  "review_method": "AI source-grounded inspection of actual model output, supplied passages, and full five-document corpus; not independent human adjudication",
+  "queries": [
+    {
+      "category": "straightforward",
+      "answer_quality": "pass",
+      "citations": "S1 exists and supports answer",
+      "api_behavior": "answered",
+      "limitations": "single example"
+    },
+    {
+      "category": "paraphrased",
+      "answer_quality": "fail",
+      "retrieval_issue": "unique-constraint and separate-check race passages absent from top-five context",
+      "generation_issue": "uncited response includes incorrect unsupported counter-increment idempotence example",
+      "api_behavior": "invalid_citations; model response withheld",
+      "citations": "none"
+    },
+    {
+      "category": "absent_specific",
+      "answer_quality": "appropriate refusal",
+      "citations": "S1 exists and supports retry guidance; no numeric limit provided in corpus",
+      "retrieval_gate": "false evidence acceptance at threshold 0.30",
+      "api_behavior": "answered instead of insufficient_evidence",
+      "limitations": "model refusal passed once; not reliable abstention evidence"
+    }
+  ]
+}

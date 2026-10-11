@@ -1,0 +1,188 @@
+{
+  "provenance": "AI-authored audit questions after reading all five unchanged source documents. Each positive label was semantically reviewed against the surrounding source section and exact offsets checked before retrieval was run. Negative labels were reviewed across the complete corpus for the requested missing specifics. Not independent human adjudication or a held-out benchmark.",
+  "license": "CC0-1.0",
+  "questions": [
+    {
+      "id": "h01",
+      "kind": "multi_evidence",
+      "question": "The event publisher died after the broker accepted an event but before it saved its progress. Does saving events alongside business writes prevent another delivery, and what protection is still needed?",
+      "expected_answer": "No. The relay may publish again after that crash; consumers still need deduplication.",
+      "evidence": [
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "A crash after publication but before recording success can publish the event again.",
+          "verified_start": 1247,
+          "verified_end": 1330,
+          "verified_line": 19
+        },
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "Consumers still need deduplication.",
+          "verified_start": 1331,
+          "verified_end": 1366,
+          "verified_line": 19
+        }
+      ],
+      "review": "The Transactional outbox paragraph explicitly describes this crash window and its remaining consumer requirement."
+    },
+    {
+      "id": "h02",
+      "kind": "paraphrased",
+      "question": "Two workers both look up the same event identifier and see no record. Why can their subsequent updates still race, and what must enforce the decision?",
+      "expected_answer": "A separate check then insert is unsafe concurrently. The unique constraint and transaction must enforce the decision together.",
+      "evidence": [
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "A separate check followed by an insert is unsafe under concurrent consumers.",
+          "verified_start": 814,
+          "verified_end": 890,
+          "verified_line": 13
+        },
+        {
+          "document": "message_delivery.md",
+          "page": null,
+          "quote": "The uniqueness constraint and transaction must enforce the decision together.",
+          "verified_start": 891,
+          "verified_end": 968,
+          "verified_line": 13
+        }
+      ],
+      "review": "Idempotent consumers distinguishes the race-prone check from the database-enforced decision; no external concurrency assumptions are needed."
+    },
+    {
+      "id": "h03",
+      "kind": "paraphrased",
+      "question": "Two doctors each see another doctor on duty and both take themselves off the schedule. Can a consistent snapshot allow this outcome, and which documented isolation guarantee is stronger?",
+      "expected_answer": "Snapshot isolation can permit write skew. Serializable isolation makes committed transactions equivalent to a serial execution.",
+      "evidence": [
+        {
+          "document": "database_transactions.md",
+          "page": null,
+          "quote": "Snapshot isolation provides a consistent snapshot but can permit write skew.",
+          "verified_start": 753,
+          "verified_end": 829,
+          "verified_line": 13
+        },
+        {
+          "document": "database_transactions.md",
+          "page": null,
+          "quote": "Serializable isolation makes committed transactions equivalent to some serial execution.",
+          "verified_start": 486,
+          "verified_end": 574,
+          "verified_line": 11
+        }
+      ],
+      "review": "The Isolation paragraph supplies the same example and explicitly contrasts snapshot with serializable isolation."
+    },
+    {
+      "id": "h04",
+      "kind": "multi_evidence",
+      "question": "In a three-copy store, clients read two copies and write two. Is overlap alone enough to prove linearizability, or what further issues matter?",
+      "expected_answer": "The quorums overlap, but this alone does not prove linearizability; version ordering, concurrent writes and failure handling matter.",
+      "evidence": [
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "For N equal to three, reading two replicas and writing two replicas creates overlap.",
+          "verified_start": 1052,
+          "verified_end": 1136,
+          "verified_line": 19
+        },
+        {
+          "document": "distributed_services.md",
+          "page": null,
+          "quote": "Overlap alone is not a complete proof of linearizability: version ordering, concurrent writes and failure handling also matter.",
+          "verified_start": 1137,
+          "verified_end": 1264,
+          "verified_line": 19
+        }
+      ],
+      "review": "Both the numerical setup and the caveat appear verbatim in Quorum replication. No claim that quorum overlap ensures linearizability is labeled correct."
+    },
+    {
+      "id": "h05",
+      "kind": "cross_document",
+      "question": "A team relies on its transaction log to recover from accidental deletion or disk loss. What additional recovery measure is called for, and how should its usefulness be demonstrated?",
+      "expected_answer": "Use a separate backup and restore strategy; test restoration and check the restored data.",
+      "evidence": [
+        {
+          "document": "database_transactions.md",
+          "page": null,
+          "quote": "A log supports crash recovery; a separate backup and restore strategy is needed for disk loss or accidental deletion.",
+          "verified_start": 1299,
+          "verified_end": 1416,
+          "verified_line": 19
+        },
+        {
+          "document": "production_observability.md",
+          "page": null,
+          "quote": "A backup is only demonstrated useful when a restore has been tested and the restored data has been checked.",
+          "verified_start": 1437,
+          "verified_end": 1544,
+          "verified_line": 23
+        }
+      ],
+      "review": "Write-ahead logging limits log recovery to crashes; Recovery testing states the concrete restore verification requirement."
+    },
+    {
+      "id": "h06",
+      "kind": "multi_evidence",
+      "question": "A question needs two independent supporting facts. The first retrieved passage supplies one fact, but the other never appears. What are evidence recall and reciprocal rank, and why does the rank score hide incompleteness?",
+      "expected_answer": "Recall is one half and reciprocal rank is one. Reciprocal rank only rewards the first relevant result, not coverage of all evidence.",
+      "evidence": [
+        {
+          "document": "retrieval_systems.md",
+          "page": null,
+          "quote": "If a question requires two independent pieces of evidence and only one is retrieved, its evidence recall is one half.",
+          "verified_start": 1059,
+          "verified_end": 1176,
+          "verified_line": 19
+        },
+        {
+          "document": "retrieval_systems.md",
+          "page": null,
+          "quote": "A relevant passage in position one contributes one; a first hit in position four contributes one quarter.",
+          "verified_start": 1642,
+          "verified_end": 1747,
+          "verified_line": 25
+        }
+      ],
+      "review": "The Recall and Reciprocal rank paragraphs directly support both numerical values. The explanation follows from their distinct definitions."
+    },
+    {
+      "id": "h07",
+      "kind": "unanswerable",
+      "question": "How many failed delivery attempts must occur before a message is moved to the dead-letter queue?",
+      "expected_answer": "The documents do not specify a numeric attempt limit.",
+      "evidence": [],
+      "review": "Reviewed all five documents. Retries and poison messages recommends a retry budget but gives no numeric maximum."
+    },
+    {
+      "id": "h08",
+      "kind": "unanswerable",
+      "question": "Exactly how many seconds should the circuit breaker remain open before permitting a trial request?",
+      "expected_answer": "The documents do not specify a duration in seconds.",
+      "evidence": [],
+      "review": "Reviewed all five documents. Circuit breakers says after a delay but contains no duration or formula for selecting one."
+    },
+    {
+      "id": "h09",
+      "kind": "unanswerable",
+      "question": "For how many days should processed message IDs be retained before the deduplication table is purged?",
+      "expected_answer": "No retention duration or purge policy is supplied.",
+      "evidence": [],
+      "review": "Reviewed all five documents. Idempotent consumers describes storage, constraints and transactional behavior but no retention policy."
+    },
+    {
+      "id": "h10",
+      "kind": "unanswerable",
+      "question": "Which cosine-similarity cutoff guarantees that 99 percent of generated answers are correct?",
+      "expected_answer": "No such cutoff or guarantee is supplied; similarity is not a calibrated probability of correctness.",
+      "evidence": [],
+      "review": "Reviewed all five documents. Embeddings explicitly warns that semantic similarity is not a calibrated correctness probability. No accuracy calibration experiment or threshold value is provided."
+    }
+  ]
+}

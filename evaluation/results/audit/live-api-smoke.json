@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "checks": [
+    "real PDF upload and embedding with page metadata",
+    "real query embedding and FAISS top result",
+    "duplicate rejection over HTTP",
+    "missing LLM with supporting passages, no simulated answer",
+    "invalid query validation",
+    "deletion removes real vectors and preserves existing library"
+  ],
+  "library_documents": 5
+}

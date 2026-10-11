@@ -1,0 +1,66 @@
+[
+  {
+    "category": "straightforward",
+    "status": "answered",
+    "cited_ids": [
+      "S1"
+    ],
+    "citations_match_model_and_supplied_sources": true,
+    "context_identity_verified": true,
+    "cited_passages": [
+      {
+        "chunk_id": "58e07d2d70f0253d0e4ea0b16cc8c1610440bcd7abf6454736764369e1154ebc",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 640,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.6249985694885254,
+        "source_id": "S1"
+      }
+    ]
+  },
+  {
+    "category": "paraphrased",
+    "status": "answered",
+    "cited_ids": [
+      "S5",
+      "S6"
+    ],
+    "citations_match_model_and_supplied_sources": true,
+    "context_identity_verified": true,
+    "cited_passages": [
+      {
+        "chunk_id": "58e07d2d70f0253d0e4ea0b16cc8c1610440bcd7abf6454736764369e1154ebc",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 0,
+        "end": 640,
+        "text": "# Message Delivery\n\n## Acknowledgements\n\nA consumer acknowledges a message only after its durable business transaction commits.\n\nIf the process crashes before acknowledging, the broker may redeliver the message. This is at-least-once delivery: a message can arrive more than once. Acknowledging before the business transaction commits risks losing work if the process crashes between those two operations. Delivery acknowledgements and database commits are separate operations unless a stronger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\n",
+        "score": 0.3573048412799835,
+        "source_id": "S5"
+      },
+      {
+        "chunk_id": "cfd94e5e095522ae8a702f806f640e1addeb13c26df8e915424520423fa627ad",
+        "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+        "document_name": "message_delivery.md",
+        "page": null,
+        "start": 490,
+        "end": 1174,
+        "text": "nger protocol connects them.\n\n## Idempotent consumers\n\nStore the message ID in a deduplication table in the same transaction as the business update.\n\nPut a unique constraint on that ID. On redelivery, an existing ID means the business change has already committed, so the consumer can acknowledge without applying it again. A separate check followed by an insert is unsafe under concurrent consumers. The uniqueness constraint and transaction must enforce the decision together. External side effects such as emails need their own idempotency mechanism.\n\n## Transactional outbox\n\nThe transactional outbox stores the business change and an outgoing event in one database transaction.\n\n",
+        "score": 0.33963683247566223,
+        "source_id": "S6"
+      }
+    ]
+  },
+  {
+    "category": "absent_specific",
+    "status": "insufficient_evidence",
+    "cited_ids": [],
+    "citations_match_model_and_supplied_sources": true,
+    "context_identity_verified": true,
+    "cited_passages": []
+  }
+]

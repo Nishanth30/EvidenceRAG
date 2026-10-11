@@ -1,0 +1,53 @@
+[
+  {
+    "category": "straightforward",
+    "facts": [
+      {
+        "anchor": "A consumer acknowledges a message only after its durable business transaction commits.",
+        "document": "message_delivery.md",
+        "line": 5,
+        "provided_source_ids": [
+          "S1"
+        ]
+      }
+    ]
+  },
+  {
+    "category": "paraphrased",
+    "facts": [
+      {
+        "anchor": "A separate check followed by an insert is unsafe under concurrent consumers.",
+        "document": "message_delivery.md",
+        "line": 13,
+        "provided_source_ids": []
+      },
+      {
+        "anchor": "The uniqueness constraint and transaction must enforce the decision together.",
+        "document": "message_delivery.md",
+        "line": 13,
+        "provided_source_ids": []
+      }
+    ]
+  },
+  {
+    "category": "absent_specific",
+    "facts": [
+      {
+        "anchor": "Transient errors can be retried using exponential backoff and jitter.",
+        "document": "message_delivery.md",
+        "line": 25,
+        "provided_source_ids": [
+          "S1"
+        ]
+      },
+      {
+        "anchor": "Set a retry budget so one invalid message does not consume the entire worker pool.",
+        "document": "message_delivery.md",
+        "line": 25,
+        "provided_source_ids": [
+          "S1"
+        ]
+      }
+    ]
+  }
+]

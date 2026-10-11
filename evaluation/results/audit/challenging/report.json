@@ -1,0 +1,76 @@
+{
+  "environment": {
+    "timestamp_utc": "2026-10-10T19:38:01.827060+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "logical_cpus": 10,
+    "python": "3.11.16",
+    "embedding_device": "cpu",
+    "omp_num_threads": "1",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_revision": "c9745ed1d9f207416be6d2e6f8de32d1f16199bf",
+    "packages": {
+      "sentence-transformers": "5.7.0",
+      "torch": "2.14.1",
+      "faiss-cpu": "1.15.1",
+      "numpy": "2.4.6"
+    },
+    "provenance": "AI-authored audit questions after reading all five unchanged source documents. Each positive label was semantically reviewed against the surrounding source section and exact offsets checked before retrieval was run. Negative labels were reviewed across the complete corpus for the requested missing specifics. Not independent human adjudication or a held-out benchmark.",
+    "dataset_sha256": "8b8cf9272895fdd44a93d22e369199df098797495f668da06f2f8783b7b9a5d6",
+    "document_sha256": {
+      "database_transactions.md": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+      "distributed_services.md": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+      "message_delivery.md": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+      "production_observability.md": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+      "retrieval_systems.md": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5"
+    },
+    "methodology": "3 sequential passes over all 10 queries per configuration, after warmup. perf_counter inside Retriever.search includes lock acquisition, query encoding, FAISS search, metadata assembly and deduplication. Excludes HTTP, UI, ingestion, model load and generation. Quality is measured once; MRR is truncated at 5. Relevance requires the full normalized anchor quote in the retrieved passage. Negatives excluded from recall/MRR. Threshold is not tuned on this dataset."
+  },
+  "configurations": [
+    {
+      "configuration": "A",
+      "strategy": "recursive",
+      "chunk_size": 500,
+      "overlap": 100,
+      "chunks": 31,
+      "queries": 10,
+      "answerable_queries": 6,
+      "unanswerable_queries": 4,
+      "timed_retrievals": 30,
+      "recall_at_3": 0.9166666666666666,
+      "recall_at_5": 0.9166666666666666,
+      "mrr_at_5": 0.9166666666666666,
+      "negative_rejection_rate": 0.0,
+      "answerable_rejection_rate": 0.0,
+      "threshold": 0.3,
+      "latency_mean_ms": 3.1101901976702115,
+      "latency_p50_ms": 3.191124487784691,
+      "latency_p95_ms": 3.570318604761269,
+      "latency_min_ms": 2.485916978912428,
+      "latency_max_ms": 3.9104580064304173
+    },
+    {
+      "configuration": "B",
+      "strategy": "recursive",
+      "chunk_size": 1000,
+      "overlap": 150,
+      "chunks": 16,
+      "queries": 10,
+      "answerable_queries": 6,
+      "unanswerable_queries": 4,
+      "timed_retrievals": 30,
+      "recall_at_3": 0.8333333333333334,
+      "recall_at_5": 1.0,
+      "mrr_at_5": 0.7000000000000001,
+      "negative_rejection_rate": 0.0,
+      "answerable_rejection_rate": 0.0,
+      "threshold": 0.3,
+      "latency_mean_ms": 3.016340362955816,
+      "latency_p50_ms": 3.1634164770366624,
+      "latency_p95_ms": 3.389056406740565,
+      "latency_min_ms": 2.488875004928559,
+      "latency_max_ms": 3.70775000192225
+    }
+  ]
+}

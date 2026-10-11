@@ -1,0 +1,76 @@
+{
+  "environment": {
+    "timestamp_utc": "2026-10-10T19:39:04.142937+00:00",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "logical_cpus": 10,
+    "python": "3.11.16",
+    "embedding_device": "cpu",
+    "omp_num_threads": "1",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedding_revision": "c9745ed1d9f207416be6d2e6f8de32d1f16199bf",
+    "packages": {
+      "sentence-transformers": "5.7.0",
+      "torch": "2.14.1",
+      "faiss-cpu": "1.15.1",
+      "numpy": "2.4.6"
+    },
+    "provenance": "AI-authored educational documents and candidate questions, checked for exact evidence presence by code. Not independently human-validated; not a held-out benchmark.",
+    "dataset_sha256": "71a52cb8ce289c2f6f6f32680e5f8be8c4c5ee91d842337c699d69cd58735c86",
+    "document_sha256": {
+      "database_transactions.md": "794ed80e2bb711e89ad66a6c4f7f22eab85738aac36423a1d757452b5463eaa3",
+      "distributed_services.md": "cb7d79107ee530f9e3c18e485171622135c6e545db78ddba05880dc72934cdb8",
+      "message_delivery.md": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+      "production_observability.md": "291b8dd1eb79f604d5a123e3701a6461992977334248e36b47796edaed612e7f",
+      "retrieval_systems.md": "ad4fd116c37caf4e907c1ec8b93321c6c0c20b32fa8db8f63a3e2e501d5b5ed5"
+    },
+    "methodology": "3 sequential passes over all 28 queries per configuration, after warmup. perf_counter inside Retriever.search includes lock acquisition, query encoding, FAISS search, metadata assembly and deduplication. Excludes HTTP, UI, ingestion, model load and generation. Quality is measured once; MRR is truncated at 5. Relevance requires the full normalized anchor quote in the retrieved passage. Negatives excluded from recall/MRR. Threshold is not tuned on this dataset."
+  },
+  "configurations": [
+    {
+      "configuration": "A",
+      "strategy": "recursive",
+      "chunk_size": 500,
+      "overlap": 100,
+      "chunks": 31,
+      "queries": 28,
+      "answerable_queries": 24,
+      "unanswerable_queries": 4,
+      "timed_retrievals": 84,
+      "recall_at_3": 0.8958333333333334,
+      "recall_at_5": 0.9375,
+      "mrr_at_5": 0.8576388888888888,
+      "negative_rejection_rate": 1.0,
+      "answerable_rejection_rate": 0.0,
+      "threshold": 0.3,
+      "latency_mean_ms": 2.462844272529418,
+      "latency_p50_ms": 2.4410625046584755,
+      "latency_p95_ms": 2.7073722929344513,
+      "latency_min_ms": 2.2232919873204082,
+      "latency_max_ms": 2.9724589840043336
+    },
+    {
+      "configuration": "B",
+      "strategy": "recursive",
+      "chunk_size": 1000,
+      "overlap": 150,
+      "chunks": 16,
+      "queries": 28,
+      "answerable_queries": 24,
+      "unanswerable_queries": 4,
+      "timed_retrievals": 84,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "mrr_at_5": 1.0,
+      "negative_rejection_rate": 1.0,
+      "answerable_rejection_rate": 0.0,
+      "threshold": 0.3,
+      "latency_mean_ms": 2.3864479170740758,
+      "latency_p50_ms": 2.3651664960198104,
+      "latency_p95_ms": 2.5537856519804336,
+      "latency_min_ms": 2.174833993194625,
+      "latency_max_ms": 2.6121250120922923
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "create": {
+    "document_id": "e8dc3a755a1c68e83569a79ad62be58d3fa21eea63a30fd1080a256ad504d775",
+    "chunks": 4,
+    "duplicate_statuses": [
+      409,
+      409,
+      409
+    ],
+    "errors": {
+      "blank_query": 422,
+      "invalid_k": 422,
+      "corrupt_pdf": 400,
+      "empty_file": 400,
+      "unsupported": 415,
+      "oversized": 413,
+      "missing_delete": 404
+    },
+    "retrieved_chunk_ids": [
+      "58e07d2d70f0253d0e4ea0b16cc8c1610440bcd7abf6454736764369e1154ebc",
+      "cfd94e5e095522ae8a702f806f640e1addeb13c26df8e915424520423fa627ad",
+      "ebe1ca64f2d98db2511dbc135bafbd5d27592b1b91276c35ba0dac97ac2c68d3",
+      "aef1e75b620277b68f1a4e3c15d31041ee688aacb5f0d26a3cdbf8d30621e8b7"
+    ],
+    "source_context_identity": "passed against SQLite page substrings, with truncation",
+    "live_llm": "not configured; no generation performed"
+  },
+  "recover_delete": {
+    "fresh_process_recovery": "passed; identical ranking after corrupt cache",
+    "deletion": "passed; all dependent rows removed"
+  },
+  "verify_deleted": {
+    "deletion_survives_second_restart": "passed"
+  }
+}
