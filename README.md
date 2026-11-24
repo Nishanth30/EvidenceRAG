@@ -177,6 +177,8 @@ Three real Qwen2.5 3B queries produced:
 
 The default retrieval count of six includes decisive evidence that ranked sixth for the paraphrased question. This is a targeted development-case adjustment, not a demonstrated general improvement.
 
+**Answer-level evaluation** ([evaluation/ANSWER_EVAL.md](evaluation/ANSWER_EVAL.md)): the full pipeline on all 28 questions with Qwen2.5 7B: 23/24 answerable questions answered with citations containing the gold evidence (19/24 before a citation-parser fix this evaluation found), 4/4 unanswerable refused, 0 unsupported answers.
+
 Artifacts: [retrieval measurements](evaluation/RESULTS.md), [dataset review](evaluation/DATASET_AUDIT.md), and [generation validation](CORRECTIVE_VALIDATION.md). Original measurements and unsuccessful intermediate generation runs are retained.
 
 ## Tests
