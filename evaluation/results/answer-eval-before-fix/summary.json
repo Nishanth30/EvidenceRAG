@@ -1,0 +1,61 @@
+{
+ "generated_at": "2026-11-24T13:21:11.071278+00:00",
+ "dataset_provenance": "AI-authored educational documents and candidate questions, checked for exact evidence presence by code. Not independently human-validated; not a held-out benchmark.",
+ "defaults": "chunk 800/150 recursive, top_k 6, similarity threshold 0.30, temperature 0",
+ "models": {
+  "qwen2.5:3b": {
+   "answerable": 24,
+   "unanswerable": 4,
+   "answered_supported": 22,
+   "answered_partial": 1,
+   "answered_unsupported": 0,
+   "wrongly_abstained": 0,
+   "abstained_no_evidence": 0,
+   "withheld_answerable": 1,
+   "evidence_retrieved": 24,
+   "supported_by_kind": {
+    "direct": "10/10",
+    "multi_evidence": "2/4",
+    "paraphrased": "10/10"
+   },
+   "citation_precision_mean": 0.978,
+   "correct_abstentions": 4,
+   "hallucinated_on_unanswerable": 0,
+   "withheld_unanswerable": 0,
+   "withheld_by_code": {
+    "invalid_model_response": 1,
+    "invalid_citations": 0,
+    "llm_unavailable": 0
+   },
+   "latency_ms_p50": 1222,
+   "latency_ms_p95": 3013
+  },
+  "qwen2.5:7b": {
+   "answerable": 24,
+   "unanswerable": 4,
+   "answered_supported": 19,
+   "answered_partial": 0,
+   "answered_unsupported": 0,
+   "wrongly_abstained": 0,
+   "abstained_no_evidence": 0,
+   "withheld_answerable": 5,
+   "evidence_retrieved": 24,
+   "supported_by_kind": {
+    "direct": "9/10",
+    "multi_evidence": "2/4",
+    "paraphrased": "8/10"
+   },
+   "citation_precision_mean": 1.0,
+   "correct_abstentions": 4,
+   "hallucinated_on_unanswerable": 0,
+   "withheld_unanswerable": 0,
+   "withheld_by_code": {
+    "invalid_model_response": 1,
+    "invalid_citations": 4,
+    "llm_unavailable": 0
+   },
+   "latency_ms_p50": 2937,
+   "latency_ms_p95": 4532
+  }
+ }
+}

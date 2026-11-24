@@ -1,0 +1,472 @@
+[
+ {
+  "id": "q01",
+  "kind": "direct",
+  "question": "When should a consumer acknowledge a message?",
+  "latency_ms": 938.0,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 4,
+  "answer": "A consumer should acknowledge a message only after its durable business transaction commits.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q02",
+  "kind": "paraphrased",
+  "question": "How do we avoid applying a business change twice after redelivery?",
+  "latency_ms": 2633.7,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 2,
+  "answer": "To avoid applying a business change twice after redelivery, we use an idempotent consumer approach. This involves storing the message ID in a deduplication table in the same transaction as the business update. A unique constraint on this ID ensures that if an existing ID is found on redelivery, the consumer can acknowledge without applying the change again, as the business change has already been committed. This approach prevents duplicate business changes by leveraging the transactional nature of the deduplication table and ensuring that the decision to apply the change is enforced together with the transactional integrity.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q03",
+  "kind": "direct",
+  "question": "How can a committed database update reliably schedule an event for publication?",
+  "latency_ms": 3330.1,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 6,
+  "answer": "A committed database update can reliably schedule an event for publication by using a transactional outbox mechanism, where the business change and the outgoing event are stored in one database transaction. This ensures that if a crash occurs after the publication but before the success is recorded, the event is not published again. Additionally, the use of idempotent consumers, where the message ID is stored in a deduplication table in the same transaction as the business update, helps prevent duplicate deliveries. The transactional outbox mechanism, combined with idempotent consumers, ensures that the event is scheduled for delivery reliably without gaps in the delivery process.",
+  "evidence_retrieved": true,
+  "citation_precision": 0.5,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q04",
+  "kind": "paraphrased",
+  "question": "Where should messages that keep failing be put?",
+  "latency_ms": 1039.4,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 4,
+  "answer": "According to S1, messages that repeatedly fail should be put into a dead-letter queue.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q05",
+  "kind": "direct",
+  "question": "What prevents a bank transfer from committing only the debit?",
+  "latency_ms": 1331.1,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 3,
+  "answer": "Atomicity prevents a bank transfer from committing only the debit by ensuring that all writes in a transaction, including debiting one balance and crediting the other, either commit together or roll back together.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q06",
+  "kind": "paraphrased",
+  "question": "Which isolation guarantee corresponds to running transactions one after another?",
+  "latency_ms": 1045.6,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 6,
+  "answer": "Serializable isolation",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q07",
+  "kind": "direct",
+  "question": "What must be persisted before a modified database page is flushed?",
+  "latency_ms": 879.9,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 5,
+  "answer": "Write-ahead logging",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q08",
+  "kind": "paraphrased",
+  "question": "Which index supports key ranges, and what does it cost for writes?",
+  "latency_ms": 729.2,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 1,
+  "answer": "Index cost for writes is added storage and write maintenance costs, as stated in S1.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q09",
+  "kind": "direct",
+  "question": "Does a timeout prove that a remote payment did not happen?",
+  "latency_ms": 1341.8,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 2,
+  "answer": "Based on S1, a timeout indicates that the caller did not receive a timely response from the remote operation, which may or may not have completed. Therefore, a timeout does not prove that a remote payment did not happen.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q10",
+  "kind": "paraphrased",
+  "question": "How can a service stop repeatedly calling a dependency that is failing?",
+  "latency_ms": 1569.2,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S4"
+  ],
+  "n_sources": 5,
+  "answer": "A service can stop repeatedly calling a failing dependency by using a circuit breaker, which temporarily stops calls to the failing dependency after a failure threshold is reached, complementing timeouts and retry budgets.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q11",
+  "kind": "direct",
+  "question": "What condition makes read and write quorums overlap?",
+  "latency_ms": 1279.3,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 2,
+  "answer": "A condition that makes read and write quorums overlap is when the sum of read quorum R and write quorum W is greater than the number of replicas N.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q12",
+  "kind": "paraphrased",
+  "question": "How can producers avoid exhausting memory when consumers fall behind?",
+  "latency_ms": 1162.8,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 2,
+  "answer": "Producers can avoid exhausting memory when consumers fall behind by using bounded queues, admission control, or flow-control signals to limit outstanding work.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q13",
+  "kind": "direct",
+  "question": "Why can inner product be used for cosine search with unit vectors?",
+  "latency_ms": 874.4,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 1,
+  "answer": "The normalized embeddings have unit length, allowing their inner product to equal cosine similarity, which is used for cosine search with unit vectors.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q14",
+  "kind": "paraphrased",
+  "question": "What are the benefits and costs of overlapping chunks?",
+  "latency_ms": 638.6,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 1,
+  "answer": "Chunk overlap preserves nearby context at boundaries but increases storage and duplicate retrieval.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q15",
+  "kind": "direct",
+  "question": "What fraction does evidence Recall@k measure?",
+  "latency_ms": 987.5,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S3"
+  ],
+  "n_sources": 3,
+  "answer": "Recall@k measures the fraction of labeled relevant evidence units found among the first k retrieved results.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q16",
+  "kind": "paraphrased",
+  "question": "How is reciprocal rank calculated if the first relevant passage is fourth?",
+  "latency_ms": 993.0,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 2,
+  "answer": "Reciprocal rank is calculated as one divided by the rank of the first relevant result, or zero when none is retrieved.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q17",
+  "kind": "direct",
+  "question": "What does the 95th percentile request duration mean?",
+  "latency_ms": 1001.1,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 2,
+  "answer": "The 95th percentile request duration in production observability represents the duration at or below which approximately 95 percent of observed requests finish.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q18",
+  "kind": "paraphrased",
+  "question": "How are operations across different services connected in a trace?",
+  "latency_ms": 1331.9,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 6,
+  "answer": "Operations across different services are connected in a trace using a shared trace identifier that links spans from multiple services.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q19",
+  "kind": "direct",
+  "question": "How does readiness differ from liveness?",
+  "latency_ms": 1209.3,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 2,
+  "answer": "Readiness differs from liveness in that liveness checks whether a process is alive, while readiness checks whether the process can serve its intended traffic, taking into account any dependencies needed for serving.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q20",
+  "kind": "paraphrased",
+  "question": "How do we verify that a backup can actually recover data?",
+  "latency_ms": 1235.4,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S3"
+  ],
+  "n_sources": 3,
+  "answer": "Verification of a backup's ability to recover data is achieved through recovery testing, where a restore is conducted and the restored data is checked to ensure its integrity and usability.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q21",
+  "kind": "multi_evidence",
+  "question": "How do acknowledgement timing and transactional deduplication work together after a consumer crash?",
+  "latency_ms": 3303.0,
+  "llm_called": true,
+  "status": "error",
+  "error_code": "invalid_model_response",
+  "cited": [],
+  "n_sources": 6,
+  "answer": "The model response was withheld because it did not follow the response contract.",
+  "evidence_retrieved": true,
+  "citation_precision": null,
+  "outcome": "withheld",
+  "raw_model_output": "{\"status\":\"answered\",\"answer\":\"Acknowledgement timing and transactional deduplication work together to ensure that a message is delivered only once, even after a consumer crash. After a consumer crash, the broker acknowledges the message only after the durable business transaction commits, ensuring that the message is not redelivered. This is achieved by storing the message ID in a deduplication table in the same transaction as the business update, which prevents the same message from being processed multiple times. The transactional outbox mechanism also plays a role by grouping the business change and an outgoing event in one database transaction, which helps in maintaining the idempotent nature of the message delivery process even in the presence of consumer crashes.\"}"
+ },
+ {
+  "id": "q22",
+  "kind": "multi_evidence",
+  "question": "What do timeouts tell a caller, and why are idempotent consumer updates needed on retries?",
+  "latency_ms": 3013.4,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S3",
+   "S6"
+  ],
+  "n_sources": 6,
+  "answer": "Timeouts inform callers that a remote operation may still be in progress, even if the response was not received within the expected timeframe. Idempotent consumer updates are needed on retries to prevent duplicate updates. For example, in the context of message delivery, an idempotent consumer stores the message ID in a deduplication table in the same transaction as the business update. If the message is redelivered, the consumer can acknowledge without applying the update again, ensuring that the update is applied only once, even if the message is delivered multiple times.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_partial"
+ },
+ {
+  "id": "q23",
+  "kind": "multi_evidence",
+  "question": "How do recall and reciprocal rank measure different aspects of retrieval?",
+  "latency_ms": 1462.5,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 4,
+  "answer": "Recall measures the fraction of labeled relevant evidence units found among the first k retrieved results, while reciprocal rank is one divided by the rank of the first relevant result, or zero when none is retrieved.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q24",
+  "kind": "multi_evidence",
+  "question": "How do circuit breakers and backpressure protect an overloaded service?",
+  "latency_ms": 2006.3,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 3,
+  "answer": "Circuit breakers protect an overloaded service by temporarily stopping calls to a failing dependency after a failure threshold is reached, preventing the service from repeatedly consuming connection and thread resources. Backpressure, on the other hand, slows producers when consumers cannot keep up, preventing unbounded queue growth by using bounded queues, admission control, or flow-control signals to limit outstanding work.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q25",
+  "kind": "unanswerable",
+  "question": "What is the capital of Peru?",
+  "latency_ms": 2.9,
+  "llm_called": false,
+  "status": "insufficient_evidence",
+  "error_code": null,
+  "cited": [],
+  "n_sources": 0,
+  "answer": "The available documents do not provide sufficient evidence to answer this question.",
+  "outcome": "correct_abstention"
+ },
+ {
+  "id": "q26",
+  "kind": "unanswerable",
+  "question": "What exact Kafka retention setting does our company use?",
+  "latency_ms": 5.1,
+  "llm_called": false,
+  "status": "insufficient_evidence",
+  "error_code": null,
+  "cited": [],
+  "n_sources": 0,
+  "answer": "The available documents do not provide sufficient evidence to answer this question.",
+  "outcome": "correct_abstention"
+ },
+ {
+  "id": "q27",
+  "kind": "unanswerable",
+  "question": "How much does our cloud provider charge per million messages?",
+  "latency_ms": 2.7,
+  "llm_called": false,
+  "status": "insufficient_evidence",
+  "error_code": null,
+  "cited": [],
+  "n_sources": 0,
+  "answer": "The available documents do not provide sufficient evidence to answer this question.",
+  "outcome": "correct_abstention"
+ },
+ {
+  "id": "q28",
+  "kind": "unanswerable",
+  "question": "Which medication should be used to treat a migraine?",
+  "latency_ms": 3.0,
+  "llm_called": false,
+  "status": "insufficient_evidence",
+  "error_code": null,
+  "cited": [],
+  "n_sources": 0,
+  "answer": "The available documents do not provide sufficient evidence to answer this question.",
+  "outcome": "correct_abstention"
+ }
+]

@@ -1,0 +1,466 @@
+[
+ {
+  "id": "q01",
+  "kind": "direct",
+  "question": "When should a consumer acknowledge a message?",
+  "latency_ms": 3000.2,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 4,
+  "answer": "A consumer should acknowledge a message only after its durable business transaction commits. This ensures that the work is not lost if the process crashes before acknowledgment.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q02",
+  "kind": "paraphrased",
+  "question": "How do we avoid applying a business change twice after redelivery?",
+  "latency_ms": 3689.7,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 2,
+  "answer": "Store the message ID in a deduplication table in the same transaction as the business update. On redelivery, an existing ID means the business change has already committed, so the consumer can acknowledge without applying it again. This ensures a business change is not applied twice after redelivery.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q03",
+  "kind": "direct",
+  "question": "How can a committed database update reliably schedule an event for publication?",
+  "latency_ms": 6304.0,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 6,
+  "answer": "A committed database update can reliably schedule an event for publication by storing the business change and an outgoing event in one database transaction (Transactional outbox). This ensures that the database commit and the corresponding event publication are linked, preventing a gap where the database commit succeeds but the event is never scheduled for delivery. If a crash occurs after the event is published but before the success is recorded, the event can be published again, but consumers still need deduplication to handle such cases. [S1]",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q04",
+  "kind": "paraphrased",
+  "question": "Where should messages that keep failing be put?",
+  "latency_ms": 2596.1,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S4"
+  ],
+  "n_sources": 4,
+  "answer": "Messages that keep failing should be put in a dead-letter queue so they can be inspected and replayed.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q05",
+  "kind": "direct",
+  "question": "What prevents a bank transfer from committing only the debit?",
+  "latency_ms": 3841.0,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 3,
+  "answer": "A database transaction ensures atomicity, making all writes in a transaction commit together or roll back together. However, external services such as a payment gateway are not automatically included in the transaction, which could potentially prevent a bank transfer from committing only the debit if the external service fails or encounters an error [S1].",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q06",
+  "kind": "paraphrased",
+  "question": "Which isolation guarantee corresponds to running transactions one after another?",
+  "latency_ms": 2904.1,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 6,
+  "answer": "Serializable isolation makes committed transactions equivalent to some serial execution.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q07",
+  "kind": "direct",
+  "question": "What must be persisted before a modified database page is flushed?",
+  "latency_ms": 2383.3,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 5,
+  "answer": "Write-ahead logging must be persisted before a modified database page is flushed.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q08",
+  "kind": "paraphrased",
+  "question": "Which index supports key ranges, and what does it cost for writes?",
+  "latency_ms": 1430.5,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 1,
+  "answer": "A B-tree index supports key ranges and adds storage and write maintenance costs.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q09",
+  "kind": "direct",
+  "question": "Does a timeout prove that a remote payment did not happen?",
+  "latency_ms": 2319.4,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 2,
+  "answer": "A timeout does not prove that a remote payment did not happen, as the remote operation may still have completed. The outcome is unknown until it can be reconciled.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q10",
+  "kind": "paraphrased",
+  "question": "How can a service stop repeatedly calling a dependency that is failing?",
+  "latency_ms": 3637.6,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S4"
+  ],
+  "n_sources": 5,
+  "answer": "A circuit breaker can stop repeatedly calling a failing dependency by temporarily stopping calls after a failure threshold is reached. This prevents the service from consuming connection and thread resources on a failing dependency.\n\n",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q11",
+  "kind": "direct",
+  "question": "What condition makes read and write quorums overlap?",
+  "latency_ms": 2653.4,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 2,
+  "answer": "Read and write quorums overlap when the sum of the read quorum (R) and write quorum (W) is greater than the total number of replicas (N).",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q12",
+  "kind": "paraphrased",
+  "question": "How can producers avoid exhausting memory when consumers fall behind?",
+  "latency_ms": 3252.0,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 2,
+  "answer": "Producers can avoid exhausting memory when consumers fall behind by using backpressure, which slows down producers when consumers cannot keep up, preventing unbounded queue growth. This can be achieved through bounded queues, admission control, or flow-control signals to limit outstanding work [S1].",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q13",
+  "kind": "direct",
+  "question": "Why can inner product be used for cosine search with unit vectors?",
+  "latency_ms": 1865.7,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 1,
+  "answer": "The inner product of unit vectors equals cosine similarity, allowing the use of inner product for cosine search in retrieval systems.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q14",
+  "kind": "paraphrased",
+  "question": "What are the benefits and costs of overlapping chunks?",
+  "latency_ms": 2565.8,
+  "llm_called": true,
+  "status": "error",
+  "error_code": "invalid_model_response",
+  "cited": [],
+  "n_sources": 1,
+  "answer": "The model response was withheld because it did not follow the response contract.",
+  "evidence_retrieved": true,
+  "citation_precision": null,
+  "outcome": "withheld",
+  "raw_model_output": "{\"status\":\"answered\",\"answer\":\"Overlapping chunks preserve nearby context at boundaries but increase storage and duplicate retrieval. However, smaller chunks may omit necessary information for context, while larger chunks can dilute specific topics and exceed input length limits. [S1]\"}"
+ },
+ {
+  "id": "q15",
+  "kind": "direct",
+  "question": "What fraction does evidence Recall@k measure?",
+  "latency_ms": 2663.7,
+  "llm_called": true,
+  "status": "error",
+  "error_code": "invalid_citations",
+  "cited": [],
+  "n_sources": 3,
+  "answer": "The model response was withheld because it did not contain valid source citations.",
+  "evidence_retrieved": true,
+  "citation_precision": null,
+  "outcome": "withheld",
+  "raw_model_output": "{\"status\":\"answered\",\"answer\":\"Recall@k measures the fraction of labeled relevant evidence units found among the first k retrieved results [S1, S3].\",\"citations\":[\"S1\", \"S3\"]}"
+ },
+ {
+  "id": "q16",
+  "kind": "paraphrased",
+  "question": "How is reciprocal rank calculated if the first relevant passage is fourth?",
+  "latency_ms": 1881.1,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 2,
+  "answer": "If the first relevant passage is fourth, the reciprocal rank is one quarter (0.25).",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q17",
+  "kind": "direct",
+  "question": "What does the 95th percentile request duration mean?",
+  "latency_ms": 2738.8,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1"
+  ],
+  "n_sources": 2,
+  "answer": "The 95th percentile request duration is the duration at or below which approximately 95 percent of observed requests finish. It helps in identifying slow tail requests that a mean might hide [S1].",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q18",
+  "kind": "paraphrased",
+  "question": "How are operations across different services connected in a trace?",
+  "latency_ms": 3886.6,
+  "llm_called": true,
+  "status": "error",
+  "error_code": "invalid_citations",
+  "cited": [],
+  "n_sources": 6,
+  "answer": "The model response was withheld because it did not contain valid source citations.",
+  "evidence_retrieved": true,
+  "citation_precision": null,
+  "outcome": "withheld",
+  "raw_model_output": "{\"status\":\"answered\",\"answer\":\"Operations across different services are connected in a trace using a shared trace identifier, which links spans from multiple services and allows following one request through dependencies [S1, S2].\",\"citations\":[\"S1\",\"S2\"]}"
+ },
+ {
+  "id": "q19",
+  "kind": "direct",
+  "question": "How does readiness differ from liveness?",
+  "latency_ms": 2969.1,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S2"
+  ],
+  "n_sources": 2,
+  "answer": "Readiness checks whether a process can serve its intended traffic, while liveness checks whether a process is alive. A process can be alive but still unable to serve traffic due to missing dependencies.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q20",
+  "kind": "paraphrased",
+  "question": "How do we verify that a backup can actually recover data?",
+  "latency_ms": 2491.5,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S3"
+  ],
+  "n_sources": 3,
+  "answer": "To verify that a backup can recover data, the restored data must be tested and checked after a restore has been performed.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q21",
+  "kind": "multi_evidence",
+  "question": "How do acknowledgement timing and transactional deduplication work together after a consumer crash?",
+  "latency_ms": 6337.4,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S1",
+   "S3"
+  ],
+  "n_sources": 6,
+  "answer": "After a consumer crash, transactional deduplication ensures that a message is not processed more than once by storing the message ID in a deduplication table in the same transaction as the business update. Acknowledgements are only sent after the durable business transaction commits, preventing work loss if the process crashes before acknowledging. If the process crashes before acknowledging, the broker may redeliver the message, but idempotent consumers can handle redeliveries by checking the message ID against the deduplication table.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q22",
+  "kind": "multi_evidence",
+  "question": "What do timeouts tell a caller, and why are idempotent consumer updates needed on retries?",
+  "latency_ms": 4531.6,
+  "llm_called": true,
+  "status": "error",
+  "error_code": "invalid_citations",
+  "cited": [],
+  "n_sources": 6,
+  "answer": "The model response was withheld because it did not contain valid source citations.",
+  "evidence_retrieved": true,
+  "citation_precision": null,
+  "outcome": "withheld",
+  "raw_model_output": "{\"status\":\"answered\",\"answer\":\"Timeouts indicate that the caller did not receive a timely response, and idempotent consumer updates are needed on retries to prevent the same operation from being applied multiple times, which could lead to double charging or other inconsistencies [S1, S3, S6].\",\"citations\":[\"S1\",\"S3\",\"S6\"]}"
+ },
+ {
+  "id": "q23",
+  "kind": "multi_evidence",
+  "question": "How do recall and reciprocal rank measure different aspects of retrieval?",
+  "latency_ms": 3462.3,
+  "llm_called": true,
+  "status": "error",
+  "error_code": "invalid_citations",
+  "cited": [],
+  "n_sources": 4,
+  "answer": "The model response was withheld because it did not contain valid source citations.",
+  "evidence_retrieved": true,
+  "citation_precision": null,
+  "outcome": "withheld",
+  "raw_model_output": "{\"status\":\"answered\",\"answer\":\"Recall measures the fraction of relevant evidence units found among the first k retrieved results, while reciprocal rank evaluates the rank of the first relevant result, providing a different perspective on retrieval effectiveness [S1, S2].\",\"citations\":[\"S1\", \"S2\"]}"
+ },
+ {
+  "id": "q24",
+  "kind": "multi_evidence",
+  "question": "How do circuit breakers and backpressure protect an overloaded service?",
+  "latency_ms": 3021.7,
+  "llm_called": true,
+  "status": "answered",
+  "error_code": null,
+  "cited": [
+   "S2",
+   "S1"
+  ],
+  "n_sources": 3,
+  "answer": "Circuit breakers stop calls to a failing dependency after a failure threshold is reached, preventing resource consumption. Backpressure slows producers when consumers cannot keep up, limiting outstanding work and making overload visible.",
+  "evidence_retrieved": true,
+  "citation_precision": 1.0,
+  "outcome": "answered_supported"
+ },
+ {
+  "id": "q25",
+  "kind": "unanswerable",
+  "question": "What is the capital of Peru?",
+  "latency_ms": 5.6,
+  "llm_called": false,
+  "status": "insufficient_evidence",
+  "error_code": null,
+  "cited": [],
+  "n_sources": 0,
+  "answer": "The available documents do not provide sufficient evidence to answer this question.",
+  "outcome": "correct_abstention"
+ },
+ {
+  "id": "q26",
+  "kind": "unanswerable",
+  "question": "What exact Kafka retention setting does our company use?",
+  "latency_ms": 3.8,
+  "llm_called": false,
+  "status": "insufficient_evidence",
+  "error_code": null,
+  "cited": [],
+  "n_sources": 0,
+  "answer": "The available documents do not provide sufficient evidence to answer this question.",
+  "outcome": "correct_abstention"
+ },
+ {
+  "id": "q27",
+  "kind": "unanswerable",
+  "question": "How much does our cloud provider charge per million messages?",
+  "latency_ms": 3.5,
+  "llm_called": false,
+  "status": "insufficient_evidence",
+  "error_code": null,
+  "cited": [],
+  "n_sources": 0,
+  "answer": "The available documents do not provide sufficient evidence to answer this question.",
+  "outcome": "correct_abstention"
+ },
+ {
+  "id": "q28",
+  "kind": "unanswerable",
+  "question": "Which medication should be used to treat a migraine?",
+  "latency_ms": 3.0,
+  "llm_called": false,
+  "status": "insufficient_evidence",
+  "error_code": null,
+  "cited": [],
+  "n_sources": 0,
+  "answer": "The available documents do not provide sufficient evidence to answer this question.",
+  "outcome": "correct_abstention"
+ }
+]

@@ -59,10 +59,18 @@ class RAGPipeline:
         except (ValueError, TypeError, ValidationError):
             return error('invalid_model_response', 'The model response was withheld because it did not follow the response contract.')
         answer = result.answer
-        cited = list(dict.fromkeys(re.findall(r'\[(S\d+)\]', answer)))
         allowed = {s.source_id for s in sources}
-        brackets = re.findall(r'\[([^\[\]\n]*)\]', answer)
-        malformed = any(re.search(r'\bS\d+', item) and item not in allowed for item in brackets)
+        # Inline references may be single [S1] or grouped [S1, S3]. Every ID inside any bracket that mentions
+        # a source must be a supplied ID; one unknown ID ([S99, S1]) withholds the whole answer.
+        cited, malformed = [], False
+        for item in re.findall(r'\[([^\[\]\n]*)\]', answer):
+            if not re.search(r'\bS\d+', item):
+                continue
+            ids = [part.strip() for part in item.split(',')]
+            if any(not re.fullmatch(r'S\d+', i) or i not in allowed for i in ids):
+                malformed = True
+            cited.extend(ids)
+        cited = list(dict.fromkeys(cited))
         if (malformed or not result.citations or not set(result.citations).issubset(allowed)
                 or (cited and set(cited) != set(result.citations))
                 or len(result.citations) != len(set(result.citations))):

@@ -49,3 +49,21 @@ def test_outgoing_context_exactly_matches_returned_sources(service, settings):
         assert source.start == original['start']
         assert source.end == source.start + len(source.text)
     assert set(result.cited_source_ids) <= {s.source_id for s in result.sources}
+
+
+@pytest.mark.parametrize('answer,citations,status', [
+    ('Keys and identifiers prevent duplicates [S1, S2].', ['S1', 'S2'], 'answered'),   # grouped, all supplied
+    ('Keys prevent duplicates [S1, S2].', ['S1'], 'error'),                            # inline and list disagree
+    ('Keys prevent duplicates [S1, S99].', ['S1'], 'error'),                           # unknown ID inside a group
+])
+def test_grouped_inline_citations(service, settings, answer, citations, status):
+    """Found by the answer-level evaluation: Qwen2.5 7B writes [S1, S3]; the bypass fix had rejected every group."""
+    service.ingest('keys.txt', b'message keys prevent duplicate message processing')
+    service.ingest('ids.txt', b'durable message identifiers prevent duplicate message processing')
+    class LLM:
+        configured = True
+        def generate(self, messages):
+            return json.dumps(dict(status='answered', answer=answer, citations=citations))
+    result = RAGPipeline(Retriever(service), LLM(), settings).ask('message duplicate processing')
+    assert len(result.sources) >= 2
+    assert result.status == status
